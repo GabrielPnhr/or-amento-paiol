@@ -9,439 +9,132 @@
 <meta name="apple-mobile-web-app-title" content="Paiol Rental">
 <meta name="theme-color" content="#1C1C1C">
 <title>Paiol Rental — Orçamento</title>
-
-<!-- PWA Manifest inline -->
 <script>
-const manifest = {
-  name: "Paiol Rental — Orçamento",
-  short_name: "Paiol ORC",
-  description: "Gerador de orçamentos Paiol Rental",
-  start_url: ".",
-  display: "standalone",
-  background_color: "#1C1C1C",
-  theme_color: "#1C1C1C",
-  orientation: "portrait",
-  icons: [
-    { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%231C1C1C'/%3E%3Crect x='0' y='178' width='192' height='14' fill='%23F5C400'/%3E%3Ctext x='96' y='90' text-anchor='middle' font-family='Arial Black,sans-serif' font-weight='900' font-size='52' fill='white'%3EPAIOL%3C/text%3E%3Ctext x='96' y='140' text-anchor='middle' font-family='Arial Black,sans-serif' font-weight='900' font-size='34' fill='%23F5C400'%3ERENTAL%3C/text%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml" },
-    { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%231C1C1C'/%3E%3Crect x='0' y='474' width='512' height='38' fill='%23F5C400'/%3E%3Ctext x='256' y='240' text-anchor='middle' font-family='Arial Black,sans-serif' font-weight='900' font-size='138' fill='white'%3EPAIOL%3C/text%3E%3Ctext x='256' y='370' text-anchor='middle' font-family='Arial Black,sans-serif' font-weight='900' font-size='90' fill='%23F5C400'%3ERENTAL%3C/text%3E%3C/svg%3E", sizes: "512x512", type: "image/svg+xml" }
-  ]
-};
-const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-const manifestUrl = URL.createObjectURL(blob);
-document.addEventListener('DOMContentLoaded', () => {
-  const link = document.createElement('link');
-  link.rel = 'manifest'; link.href = manifestUrl;
-  document.head.appendChild(link);
-});
+const manifest={name:"Paiol Rental — Orçamento",short_name:"Paiol ORC",display:"standalone",background_color:"#1C1C1C",theme_color:"#1C1C1C",orientation:"portrait",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%231C1C1C'/%3E%3Crect x='0' y='178' width='192' height='14' fill='%23F5C400'/%3E%3Ctext x='96' y='100' text-anchor='middle' font-family='Arial Black' font-size='52' fill='white'%3EPAIOL%3C/text%3E%3Ctext x='96' y='148' text-anchor='middle' font-family='Arial Black' font-size='34' fill='%23F5C400'%3ERENTAL%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"}]};
+document.addEventListener('DOMContentLoaded',()=>{const b=new Blob([JSON.stringify(manifest)],{type:'application/json'});const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(b);document.head.appendChild(l);});
 </script>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 <style>
-:root {
-  --y: #F5C400;
-  --yd: #C9A000;
-  --dark: #1C1C1C;
-  --mid: #2A2A2A;
-  --card: #242424;
-  --border: rgba(255,255,255,0.08);
-  --text: #FFFFFF;
-  --muted: rgba(255,255,255,0.45);
-  --green: #25D366;
-  --fh: 'Barlow Condensed', sans-serif;
-  --fb: 'Barlow', sans-serif;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bot: env(safe-area-inset-bottom, 0px);
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; overflow: hidden; background: var(--dark); }
-body {
-  font-family: var(--fb);
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  padding-top: var(--safe-top);
-  padding-bottom: var(--safe-bot);
-}
-
-/* ── TOPBAR ── */
-.topbar {
-  background: var(--dark);
-  border-bottom: 2px solid var(--y);
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-  gap: 12px;
-}
-.logo { font-family: var(--fh); font-weight: 900; line-height: 1; }
-.logo-p { font-size: 22px; color: var(--text); letter-spacing: 1px; }
-.logo-r { font-size: 14px; color: var(--y); letter-spacing: 5px; }
-.orc-num {
-  font-family: var(--fh);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--muted);
-  text-transform: uppercase;
-  text-align: right;
-}
-.orc-num strong { color: var(--y); display: block; font-size: 15px; }
-
-/* ── TABS ── */
-.tabs {
-  display: flex;
-  background: var(--mid);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.tab {
-  flex: 1;
-  padding: 13px 8px;
-  font-family: var(--fh);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-align: center;
-  cursor: pointer;
-  border: none;
-  background: none;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-  position: relative;
-}
-.tab.active { color: var(--y); border-bottom-color: var(--y); }
-
-/* ── SCROLL CONTENT ── */
-.screens { flex: 1; overflow: hidden; position: relative; }
-.screen {
-  position: absolute;
-  inset: 0;
-  overflow-y: auto;
-  padding: 20px;
-  display: none;
-  -webkit-overflow-scrolling: touch;
-}
-.screen.active { display: block; }
-
-/* ── SECTIONS ── */
-.sec-label {
-  font-family: var(--fh);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--y);
-  margin-bottom: 10px;
-  margin-top: 24px;
-  display: block;
-}
-.sec-label:first-child { margin-top: 0; }
-
-/* ── FORM FIELDS ── */
-.frow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.fg { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
-.fg label {
-  font-family: var(--fh);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.fg input, .fg select, .fg textarea {
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 12px 14px;
-  font-family: var(--fb);
-  font-size: 15px;
-  outline: none;
-  border-radius: 0;
-  appearance: none;
-  width: 100%;
-  transition: border-color 0.2s;
-  -webkit-appearance: none;
-}
-.fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--y); }
-.fg select option { background: var(--mid); }
-.fg textarea { resize: vertical; min-height: 80px; }
-
-/* ── ITEM CARDS ── */
-.item-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 14px;
-  margin-bottom: 8px;
-  position: relative;
-}
-.item-card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.item-idx {
-  font-family: var(--fh);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--y);
-}
-.remove-btn {
-  background: rgba(255,80,80,0.1);
-  border: 1px solid rgba(255,80,80,0.2);
-  color: rgba(255,100,100,0.7);
-  font-size: 15px;
-  width: 28px; height: 28px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  border-radius: 0;
-}
-.item-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.item-sub {
-  background: rgba(245,196,0,0.06);
-  border-top: 1px solid var(--border);
-  margin-top: 10px;
-  padding-top: 8px;
-  font-family: var(--fh);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--y);
-  text-align: right;
-  letter-spacing: 1px;
-}
-
-/* ── ADD BUTTON ── */
-.add-btn {
-  width: 100%;
-  background: transparent;
-  border: 1px dashed rgba(245,196,0,0.3);
-  color: var(--y);
-  font-family: var(--fh);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 14px;
-  cursor: pointer;
-  margin-bottom: 24px;
-  transition: background 0.2s;
-}
-.add-btn:hover, .add-btn:active { background: rgba(245,196,0,0.07); }
-
-/* ── TOTAIS ── */
-.totais-box {
-  background: var(--card);
-  border: 1px solid var(--border);
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-.totais-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 13px 16px;
-  font-size: 14px;
-  color: var(--muted);
-  border-bottom: 1px solid var(--border);
-}
-.totais-row:last-child { border-bottom: none; }
-.totais-row.total {
-  background: var(--y);
-  color: var(--dark);
-  font-family: var(--fh);
-  font-size: 18px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.totais-row span:last-child { font-weight: 600; color: var(--text); }
-.totais-row.total span:last-child { color: var(--dark); font-size: 22px; }
-
-/* ── ACTION BUTTONS ── */
-.action-area {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-bottom: 20px;
-}
-.btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-family: var(--fh);
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 16px;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  transition: all 0.15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.btn:active { transform: scale(0.98); }
-.btn-y { background: var(--y); color: var(--dark); }
-.btn-g { background: var(--green); color: #fff; }
-.btn-o { background: transparent; border: 1px solid var(--border); color: var(--muted); }
-
-/* ── PREVIEW TAB ── */
-.preview-note {
-  background: rgba(245,196,0,0.06);
-  border: 1px solid rgba(245,196,0,0.15);
-  padding: 14px 16px;
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 20px;
-  line-height: 1.6;
-}
-.preview-note strong { color: var(--y); }
-.preview-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 20px;
-  margin-bottom: 12px;
-}
-.preview-card h4 {
-  font-family: var(--fh);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--y);
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-.preview-card p, .preview-card li {
-  font-size: 14px;
-  color: rgba(255,255,255,0.65);
-  line-height: 1.7;
-}
-.preview-card ul { padding-left: 0; list-style: none; }
-.preview-card ul li { padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
-.preview-card ul li:last-child { border-bottom: none; }
-.preview-card ul li span { color: var(--y); font-weight: 600; font-family: var(--fh); font-size: 15px; }
-.total-preview {
-  background: var(--y);
-  padding: 18px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.total-preview span {
-  font-family: var(--fh);
-  font-weight: 900;
-  font-size: 14px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--dark);
-}
-.total-preview strong { font-family: var(--fh); font-size: 26px; font-weight: 900; color: var(--dark); }
-
-/* ── HISTÓRICO ── */
-.hist-empty { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 14px; line-height: 1.8; }
-.hist-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 16px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-.hist-card:active { border-color: var(--y); }
-.hist-card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-.hist-num { font-family: var(--fh); font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--y); text-transform: uppercase; }
-.hist-date { font-size: 12px; color: var(--muted); }
-.hist-cliente { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.hist-total { font-family: var(--fh); font-size: 18px; font-weight: 800; color: var(--y); }
-.hist-actions { display: flex; gap: 8px; margin-top: 12px; }
-.hist-btn {
-  flex: 1;
-  padding: 10px;
-  font-family: var(--fh);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.hist-btn.primary { background: var(--y); color: var(--dark); border-color: var(--y); }
-.hist-btn:active { transform: scale(0.97); }
-
-/* ── TOAST ── */
-.toast {
-  position: fixed;
-  bottom: calc(20px + var(--safe-bot));
-  left: 50%; transform: translateX(-50%) translateY(80px);
-  background: var(--y);
-  color: var(--dark);
-  font-family: var(--fh);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 12px 24px;
-  z-index: 9999;
-  transition: transform 0.3s ease;
-  white-space: nowrap;
-  pointer-events: none;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
-
-/* ── INSTALL BANNER ── */
-.install-banner {
-  background: var(--y);
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-shrink: 0;
-}
-.install-banner p { font-family: var(--fh); font-size: 13px; font-weight: 700; color: var(--dark); letter-spacing: 0.5px; line-height: 1.4; }
-.install-banner p span { display: block; font-size: 11px; font-weight: 600; opacity: 0.65; letter-spacing: 1px; text-transform: uppercase; }
-.install-btn-group { display: flex; gap: 8px; flex-shrink: 0; }
-.ib { font-family: var(--fh); font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 8px 14px; border: none; cursor: pointer; background: var(--dark); color: var(--white); }
-.ib.dismiss { background: rgba(0,0,0,0.15); color: var(--dark); }
+:root{--y:#F5C400;--yd:#C9A000;--dk:#1C1C1C;--md:#2A2A2A;--cd:#242424;--br:rgba(255,255,255,0.08);--tx:#FFF;--mu:rgba(255,255,255,0.45);--gn:#25D366;--fh:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--dk)}
+body{font-family:var(--fb);color:var(--tx);display:flex;flex-direction:column;padding-top:var(--st);padding-bottom:var(--sb)}
+.topbar{background:var(--dk);border-bottom:2px solid var(--y);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
+.logo{font-family:var(--fh);font-weight:900;line-height:1}
+.logo-p{font-size:22px;color:var(--tx);letter-spacing:1px}
+.logo-r{font-size:14px;color:var(--y);letter-spacing:5px}
+.orc-num{font-family:var(--fh);font-size:12px;font-weight:700;letter-spacing:2px;color:var(--mu);text-transform:uppercase;text-align:right}
+.orc-num strong{color:var(--y);display:block;font-size:15px}
+.tabs{display:flex;background:var(--md);border-bottom:1px solid var(--br);flex-shrink:0}
+.tab{flex:1;padding:13px 8px;font-family:var(--fh);font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--mu);text-align:center;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all 0.2s}
+.tab.active{color:var(--y);border-bottom-color:var(--y)}
+.screens{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;padding:20px;display:none;-webkit-overflow-scrolling:touch}
+.screen.active{display:block}
+.sec-label{font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--y);margin-bottom:10px;margin-top:22px;display:block}
+.sec-label:first-child{margin-top:0}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.fg label{font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu)}
+.fg input,.fg select,.fg textarea{background:var(--cd);border:1px solid var(--br);color:var(--tx);padding:12px 14px;font-family:var(--fb);font-size:15px;outline:none;appearance:none;width:100%;transition:border-color 0.2s;-webkit-appearance:none;border-radius:0}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--y)}
+.fg select option{background:var(--md)}
+.fg textarea{resize:vertical;min-height:80px}
+/* ITEM CARD */
+.item-card{background:var(--cd);border:1px solid var(--br);padding:14px;margin-bottom:8px}
+.item-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.item-idx{font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--y)}
+.rm-btn{background:rgba(255,80,80,0.1);border:1px solid rgba(255,80,80,0.2);color:rgba(255,100,100,0.7);font-size:15px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:0}
+.item-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.item-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.item-sub{background:rgba(245,196,0,0.06);border-top:1px solid var(--br);margin-top:10px;padding:8px 4px;font-family:var(--fh);font-size:13px;font-weight:700;color:var(--y);text-align:right;letter-spacing:1px}
+.add-btn{width:100%;background:transparent;border:1px dashed rgba(245,196,0,0.3);color:var(--y);font-family:var(--fh);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px;cursor:pointer;margin-bottom:20px;transition:background 0.2s}
+.add-btn:active{background:rgba(245,196,0,0.07)}
+/* FRETE TOGGLE */
+.frete-toggle{background:var(--cd);border:1px solid var(--br);padding:14px;margin-bottom:10px}
+.frete-toggle-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0}
+.frete-label{font-family:var(--fh);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tx)}
+.toggle-wrap{display:flex;gap:0;border:1px solid var(--br)}
+.toggle-opt{font-family:var(--fh);font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:8px 16px;cursor:pointer;border:none;background:transparent;color:var(--mu);transition:all 0.2s}
+.toggle-opt.active{background:var(--y);color:var(--dk)}
+.frete-body{margin-top:12px;display:none}
+.frete-body.show{display:block}
+/* TOTAIS */
+.totais-box{background:var(--cd);border:1px solid var(--br);overflow:hidden;margin-bottom:20px}
+.totais-row{display:flex;justify-content:space-between;padding:12px 16px;font-size:14px;color:var(--mu);border-bottom:1px solid var(--br)}
+.totais-row:last-child{border-bottom:none}
+.totais-row.total{background:var(--y);color:var(--dk);font-family:var(--fh);font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:1px}
+.totais-row span:last-child{font-weight:600;color:var(--tx)}
+.totais-row.total span:last-child{color:var(--dk);font-size:22px}
+/* DDL BOX */
+.ddl-box{background:rgba(245,196,0,0.07);border:1px solid rgba(245,196,0,0.25);padding:14px 16px;margin-bottom:12px;display:none}
+.ddl-head{font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--y);margin-bottom:8px}
+.ddl-inner{display:flex;justify-content:space-between;align-items:center}
+.ddl-prazo{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--y);letter-spacing:1px;margin-top:2px}
+.ddl-dias{font-size:13px;color:rgba(255,255,255,0.5)}
+.ddl-ref{text-align:right;font-size:11px;color:rgba(255,255,255,0.3);line-height:1.5}
+/* BUTTONS */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--fh);font-weight:700;font-size:16px;letter-spacing:1.5px;text-transform:uppercase;padding:16px;border:none;cursor:pointer;width:100%;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(0.98)}
+.btn-y{background:var(--y);color:var(--dk)}
+.btn-g{background:var(--gn);color:#fff}
+.btn-o{background:transparent;border:1px solid var(--br);color:var(--mu)}
+.action-area{display:flex;flex-direction:column;gap:10px;padding-bottom:20px}
+/* PREVIEW */
+.preview-note{background:rgba(245,196,0,0.06);border:1px solid rgba(245,196,0,0.15);padding:14px 16px;font-size:13px;color:var(--mu);margin-bottom:20px;line-height:1.6}
+.preview-note strong{color:var(--y)}
+.preview-card{background:var(--cd);border:1px solid var(--br);padding:20px;margin-bottom:12px}
+.preview-card h4{font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--y);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--br)}
+.preview-card p,.preview-card li{font-size:14px;color:rgba(255,255,255,0.65);line-height:1.7}
+.preview-card ul{padding-left:0;list-style:none}
+.preview-card ul li{padding:6px 0;border-bottom:1px solid var(--br);display:flex;justify-content:space-between}
+.preview-card ul li:last-child{border-bottom:none}
+.preview-card ul li span{color:var(--y);font-weight:600;font-family:var(--fh);font-size:15px}
+.total-preview{background:var(--y);padding:18px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.total-preview span{font-family:var(--fh);font-weight:900;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--dk)}
+.total-preview strong{font-family:var(--fh);font-size:26px;font-weight:900;color:var(--dk)}
+/* HISTORICO */
+.hist-empty{text-align:center;padding:60px 20px;color:var(--mu);font-size:14px;line-height:1.8}
+.hist-card{background:var(--cd);border:1px solid var(--br);padding:16px;margin-bottom:8px}
+.hist-card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.hist-num{font-family:var(--fh);font-size:13px;font-weight:700;letter-spacing:2px;color:var(--y);text-transform:uppercase}
+.hist-date{font-size:12px;color:var(--mu)}
+.hist-cliente{font-size:15px;font-weight:600;color:var(--tx);margin-bottom:4px}
+.hist-total{font-family:var(--fh);font-size:18px;font-weight:800;color:var(--y)}
+.hist-actions{display:flex;gap:8px;margin-top:12px}
+.hist-btn{flex:1;padding:10px;font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:1px solid var(--br);background:transparent;color:var(--mu);cursor:pointer;transition:all 0.15s}
+.hist-btn.primary{background:var(--y);color:var(--dk);border-color:var(--y)}
+/* INSTALL BANNER */
+.install-banner{background:var(--y);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
+.install-banner p{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--dk);letter-spacing:0.5px;line-height:1.4}
+.install-banner p span{display:block;font-size:11px;font-weight:600;opacity:0.65;letter-spacing:1px;text-transform:uppercase}
+.ib-btns{display:flex;gap:8px;flex-shrink:0}
+.ib{font-family:var(--fh);font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:8px 14px;border:none;cursor:pointer;background:var(--dk);color:#fff}
+.ib.dim{background:rgba(0,0,0,0.15);color:var(--dk)}
+/* TOAST */
+.toast{position:fixed;bottom:calc(20px + var(--sb));left:50%;transform:translateX(-50%) translateY(80px);background:var(--y);color:var(--dk);font-family:var(--fh);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:12px 24px;z-index:9999;transition:transform 0.3s ease;white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+/* PRECO HINT */
+.preco-hint{font-size:11px;color:rgba(245,196,0,0.6);margin-top:4px;font-style:italic}
 </style>
 </head>
 <body>
 
-<!-- INSTALL BANNER (iOS) -->
 <div class="install-banner" id="installBanner" style="display:none">
   <p>Adicione à tela inicial<span>Funciona como aplicativo</span></p>
-  <div class="install-btn-group">
+  <div class="ib-btns">
     <button class="ib" onclick="showInstallGuide()">Como fazer</button>
-    <button class="ib dismiss" onclick="dismissBanner()">✕</button>
+    <button class="ib dim" onclick="dismissBanner()">✕</button>
   </div>
 </div>
 
-<!-- TOPBAR -->
 <div class="topbar">
-  <div class="logo">
-    <div class="logo-p">PAIOL</div>
-    <div class="logo-r">RENTAL</div>
-  </div>
-  <div class="orc-num">
-    Orçamento<strong id="topNum">—</strong>
-  </div>
+  <div class="logo"><div class="logo-p">PAIOL</div><div class="logo-r">RENTAL</div></div>
+  <div class="orc-num">Orçamento<strong id="topNum">—</strong></div>
 </div>
 
-<!-- TABS -->
 <div class="tabs">
   <button class="tab active" onclick="goTab(0,this)">Dados</button>
   <button class="tab" onclick="goTab(1,this)">Itens</button>
@@ -449,328 +142,479 @@ body {
   <button class="tab" onclick="goTab(3,this)">Histórico</button>
 </div>
 
-<!-- SCREENS -->
 <div class="screens">
 
-  <!-- TAB 0: DADOS DO CLIENTE -->
-  <div class="screen active" id="screen0">
-    <span class="sec-label">Número do orçamento</span>
+<!-- TAB 0: DADOS -->
+<div class="screen active" id="screen0">
+  <span class="sec-label">Número do orçamento</span>
+  <div class="fg"><label>Nº Orçamento</label><input type="text" id="orcNum" placeholder="Ex: 001/2025" oninput="syncNum()"></div>
+
+  <span class="sec-label">Cliente</span>
+  <div class="fg"><label>Nome / Empresa *</label><input type="text" id="clientName" placeholder="Razão social ou nome" oninput="update()"></div>
+  <div class="frow">
+    <div class="fg"><label>CNPJ / CPF</label><input type="text" id="clientDoc" placeholder="XX.XXX.XXX/0001-XX" oninput="update()"></div>
+    <div class="fg"><label>Contato (A/C)</label><input type="text" id="clientContact" placeholder="Nome do responsável" oninput="update()"></div>
+  </div>
+  <div class="frow">
+    <div class="fg"><label>WhatsApp *</label><input type="tel" id="clientPhone" placeholder="(11) 00000-0000" oninput="update()"></div>
+    <div class="fg"><label>E-mail</label><input type="email" id="clientEmail" placeholder="email@empresa.com" oninput="update()"></div>
+  </div>
+  <div class="fg"><label>Endereço de entrega / Obra</label><input type="text" id="clientAddr" placeholder="Endereço completo da obra" oninput="update()"></div>
+
+  <span class="sec-label">Período</span>
+  <div class="frow">
+    <div class="fg"><label>Data início</label><input type="date" id="dateStart" oninput="update()"></div>
+    <div class="fg"><label>Data fim</label><input type="date" id="dateEnd" oninput="update()"></div>
+  </div>
+
+  <!-- DDL automático -->
+  <div class="ddl-box" id="ddlBox">
+    <div class="ddl-head">Prazo de pagamento (DDL)</div>
+    <div class="ddl-inner">
+      <div><div class="ddl-dias" id="ddlDias"></div><div class="ddl-prazo" id="ddlPrazo"></div></div>
+      <div class="ddl-ref">1–14 dias → 15 DDL<br>15–30 dias → 28 DDL</div>
+    </div>
+  </div>
+
+  <span class="sec-label">Condições</span>
+  <div class="frow">
     <div class="fg">
-      <label>Nº Orçamento</label>
-      <input type="text" id="orcNum" placeholder="Ex: 001/2025" oninput="syncNum()">
+      <label>Validade da proposta</label>
+      <select id="validade" onchange="update()">
+        <option>3 dias úteis</option>
+        <option selected>5 dias úteis</option>
+        <option>7 dias úteis</option>
+        <option>15 dias</option>
+      </select>
     </div>
-
-    <span class="sec-label">Cliente</span>
-    <div class="fg"><label>Nome / Empresa *</label><input type="text" id="clientName" placeholder="Razão social ou nome" oninput="update()"></div>
-    <div class="frow">
-      <div class="fg"><label>CNPJ / CPF</label><input type="text" id="clientDoc" placeholder="XX.XXX.XXX/0001-XX" oninput="update()"></div>
-      <div class="fg"><label>Contato</label><input type="text" id="clientContact" placeholder="Responsável" oninput="update()"></div>
-    </div>
-    <div class="frow">
-      <div class="fg"><label>WhatsApp *</label><input type="tel" id="clientPhone" placeholder="(11) 00000-0000" oninput="update()"></div>
-      <div class="fg"><label>E-mail</label><input type="email" id="clientEmail" placeholder="email@empresa.com" oninput="update()"></div>
-    </div>
-    <div class="fg"><label>Local de entrega / Obra</label><input type="text" id="clientAddr" placeholder="Endereço da obra ou empresa" oninput="update()"></div>
-
-    <span class="sec-label">Período</span>
-    <div class="frow">
-      <div class="fg"><label>Data início</label><input type="date" id="dateStart" oninput="update()"></div>
-      <div class="fg"><label>Data fim</label><input type="date" id="dateEnd" oninput="update()"></div>
-    </div>
-
-    <span class="sec-label">Condições</span>
-    <div class="frow">
-      <div class="fg">
-        <label>Validade</label>
-        <select id="validade" onchange="update()">
-          <option>3 dias úteis</option>
-          <option selected>5 dias úteis</option>
-          <option>7 dias úteis</option>
-          <option>15 dias</option>
-        </select>
-      </div>
-      <div class="fg">
-        <label>Forma de pagamento</label>
-        <select id="pagamento" onchange="update()">
-          <option>PIX / Transferência</option>
-          <option>Boleto bancário</option>
-          <option>Cartão de crédito</option>
-          <option>A combinar</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- PRAZO DDL automático -->
-    <div id="ddlBox" style="background:rgba(245,196,0,0.07);border:1px solid rgba(245,196,0,0.25);padding:14px 16px;margin-bottom:12px;display:none;">
-      <div style="font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--y);margin-bottom:8px;">Prazo de pagamento (DDL)</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div>
-          <div id="ddlDias" style="font-size:13px;color:rgba(255,255,255,0.5);"></div>
-          <div id="ddlPrazo" style="font-family:var(--fh);font-size:22px;font-weight:900;color:var(--y);letter-spacing:1px;margin-top:2px;"></div>
-        </div>
-        <div style="text-align:right;font-size:11px;color:rgba(255,255,255,0.3);line-height:1.5;">
-          1–14 dias → 15 DDL<br>15–30 dias → 28 DDL
-        </div>
-      </div>
-    </div>
-
-    <div class="fg"><label>Observações</label><textarea id="obs" placeholder="Anotações internas, condições especiais..." oninput="update()"></textarea></div>
-
-    <div class="action-area">
-      <button class="btn btn-y" onclick="goTab(1,document.querySelectorAll('.tab')[1])">Próximo — Equipamentos</button>
+    <div class="fg">
+      <label>Forma de pagamento</label>
+      <select id="pagamento" onchange="update()">
+        <option>PIX / Transferência</option>
+        <option>Boleto bancário</option>
+        <option>Cartão de crédito</option>
+        <option>A combinar</option>
+      </select>
     </div>
   </div>
+  <div class="fg"><label>Observações / Assunto</label><textarea id="obs" placeholder="Ex: Proposta de Locação de Plataformas..." oninput="update()"></textarea></div>
 
-  <!-- TAB 1: ITENS -->
-  <div class="screen" id="screen1">
-    <span class="sec-label">Equipamentos</span>
-    <div id="itemsList"></div>
-    <button class="add-btn" onclick="addItem()">+ Adicionar equipamento</button>
-
-    <span class="sec-label">Ajustes de valor</span>
-    <div class="frow">
-      <div class="fg"><label>Frete (R$)</label><input type="number" id="frete" placeholder="0,00" min="0" step="0.01" oninput="update()"></div>
-      <div class="fg"><label>Desconto (R$)</label><input type="number" id="desconto" placeholder="0,00" min="0" step="0.01" oninput="update()"></div>
-    </div>
-
-    <div class="totais-box" id="totaisBox">
-      <div class="totais-row"><span>Subtotal</span><span id="tSubtotal">R$ 0,00</span></div>
-      <div class="totais-row" id="trFrete" style="display:none"><span>Frete</span><span id="tFrete">R$ 0,00</span></div>
-      <div class="totais-row" id="trDesc" style="display:none"><span>Desconto</span><span id="tDesc" style="color:#ff7070">— R$ 0,00</span></div>
-      <div class="totais-row total"><span>Total</span><span id="tTotal">R$ 0,00</span></div>
-    </div>
-
-    <div class="action-area">
-      <button class="btn btn-y" onclick="goTab(2,document.querySelectorAll('.tab')[2])">Revisar orçamento</button>
-    </div>
-  </div>
-
-  <!-- TAB 2: REVISÃO + ENVIO -->
-  <div class="screen" id="screen2">
-    <div class="preview-note">
-      <strong>Revise antes de enviar.</strong> Confira os dados abaixo e escolha como enviar o orçamento ao cliente.
-    </div>
-
-    <div class="preview-card" id="prev_cliente">
-      <h4>Cliente</h4>
-      <p id="prev_clienteInfo">—</p>
-    </div>
-
-    <div class="preview-card">
-      <h4>Equipamentos</h4>
-      <ul id="prev_itens"><li><span>Sem itens</span></li></ul>
-    </div>
-
-    <div class="total-preview">
-      <span>Total</span>
-      <strong id="prev_total">R$ 0,00</strong>
-    </div>
-
-    <div class="preview-card">
-      <h4>Condições</h4>
-      <p id="prev_cond">—</p>
-    </div>
-
-    <div class="action-area">
-      <button class="btn btn-g" onclick="enviarWA()">Enviar por WhatsApp</button>
-      <button class="btn btn-y" onclick="gerarPDF()">Gerar PDF</button>
-      <button class="btn btn-o" onclick="salvarHistorico()">Salvar no histórico</button>
-    </div>
-  </div>
-
-  <!-- TAB 3: HISTÓRICO -->
-  <div class="screen" id="screen3">
-    <span class="sec-label">Orçamentos salvos</span>
-    <div id="histList"></div>
-    <div class="action-area" style="margin-top:8px">
-      <button class="btn btn-o" onclick="if(confirm('Limpar todo o histórico?')){localStorage.removeItem('paiol_hist');renderHist();}">Limpar histórico</button>
-    </div>
-  </div>
-
-</div><!-- /screens -->
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<!-- PDF (oculto) -->
-<div id="pdfDoc" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:'Barlow',sans-serif;font-size:13px;color:#222;">
-  <div style="background:#1C1C1C;padding:36px 48px 28px;display:flex;justify-content:space-between;align-items:flex-end;">
-    <div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;color:#fff;line-height:1">PAIOL</div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:#F5C400;letter-spacing:6px">RENTAL</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:8px;line-height:1.6">Rua Vicente Cecilo, 31 · Osasco – SP<br>(11) 95426-7917 · paiola.abner@icloud.com</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#F5C400;letter-spacing:2px">ORÇAMENTO</div>
-      <div id="pdf_num" style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px"></div>
-      <div id="pdf_date" style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px"></div>
-    </div>
-  </div>
-  <div style="background:#F5C400;height:5px"></div>
-  <div style="padding:36px 48px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:28px">
-      <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#999;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #eee">Cliente</div>
-        <div id="pdf_cliente" style="font-size:13px;line-height:1.7;color:#333"></div>
-      </div>
-      <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#999;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #eee">Entrega / Obra</div>
-        <div id="pdf_addr" style="font-size:13px;color:#333;line-height:1.7"></div>
-        <div id="pdf_validade" style="margin-top:10px;display:inline-block;background:#fffbe0;border:1px solid #f0d060;color:#7a5a00;font-size:11px;padding:4px 10px;font-weight:600"></div>
-      </div>
-    </div>
-    <table id="pdf_table" style="width:100%;border-collapse:collapse;margin-bottom:24px">
-      <thead>
-        <tr style="background:#1C1C1C">
-          <th style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F5C400;padding:12px 14px;text-align:left;width:42%">Equipamento</th>
-          <th style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F5C400;padding:12px 14px;text-align:left">Período</th>
-          <th style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F5C400;padding:12px 14px;text-align:center">Qtd</th>
-          <th style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F5C400;padding:12px 14px;text-align:right">Unit.</th>
-          <th style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F5C400;padding:12px 14px;text-align:right">Subtotal</th>
-        </tr>
-      </thead>
-      <tbody id="pdf_tbody"></tbody>
-      <tfoot id="pdf_tfoot"></tfoot>
-    </table>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:20px">
-      <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#999;margin-bottom:6px">Período de locação</div>
-        <div id="pdf_periodo" style="font-size:13px;color:#333"></div>
-      </div>
-      <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#999;margin-bottom:6px">Forma de pagamento</div>
-        <div id="pdf_pag" style="font-size:13px;color:#333"></div>
-      </div>
-    </div>
-    <div style="border-left:3px solid #F5C400;padding:16px 20px;background:#fafafa;margin-bottom:20px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#888;margin-bottom:8px">Condições gerais</div>
-      <ul style="padding-left:16px;font-size:12px;color:#555;line-height:1.7">
-        <li>Equipamentos entregues revisados e em perfeito estado de funcionamento</li>
-        <li>O operador deve ser habilitado conforme NR-11 / NR-35</li>
-        <li>Danos por mau uso são de responsabilidade do locatário</li>
-        <li>Este orçamento não substitui o contrato formal de locação</li>
-      </ul>
-    </div>
-    <div id="pdf_obs_box" style="display:none;background:#fffbea;border:1px solid #f0d060;padding:14px 18px;margin-bottom:20px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#b8960a;margin-bottom:6px">Observações</div>
-      <div id="pdf_obs" style="font-size:12px;color:#6b5b00;line-height:1.7"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;margin:28px 0 20px">
-      <div style="text-align:center">
-        <div style="border-bottom:1px solid #ccc;height:48px;margin-bottom:8px"></div>
-        <div style="font-size:11px;color:#999;letter-spacing:1px;text-transform:uppercase">Paiol Rental · Responsável</div>
-      </div>
-      <div style="text-align:center">
-        <div style="border-bottom:1px solid #ccc;height:48px;margin-bottom:8px"></div>
-        <div id="pdf_signClient" style="font-size:11px;color:#999;letter-spacing:1px;text-transform:uppercase">Cliente · Responsável</div>
-      </div>
-    </div>
-  </div>
-  <div style="background:#1C1C1C;padding:18px 48px;display:flex;justify-content:space-between">
-    <div style="font-size:11px;color:rgba(255,255,255,0.35)">Paiol Rental · Rua Vicente Cecilo, 31 · Osasco – SP</div>
-    <div style="font-size:11px;color:rgba(255,255,255,0.35)">(11) 95426-7917 · paiola.abner@icloud.com</div>
+  <div class="action-area">
+    <button class="btn btn-y" onclick="goTab(1,document.querySelectorAll('.tab')[1])">Próximo — Equipamentos</button>
   </div>
 </div>
 
-<script>
-// ── CONSTANTES ──
-const EQUIPAMENTOS = ['Empilhadeira a GLP','Empilhadeira Diesel','Empilhadeira Elétrica','Plataforma Tesoura Elétrica','Plataforma Tesoura Diesel','Plataforma Articulada','Plataforma Elevatória','Transpaleteira Elétrica','Transpaleteira Manual','Outro equipamento'];
-const PERIODOS = ['Diária','Semanal','Quinzenal','Mensal','A combinar'];
+<!-- TAB 1: ITENS -->
+<div class="screen" id="screen1">
+  <span class="sec-label">Equipamentos</span>
+  <div id="itemsList"></div>
+  <button class="add-btn" onclick="addItem()">+ Adicionar equipamento</button>
 
-// ── ESTADO ──
+  <!-- FRETE TOGGLE -->
+  <span class="sec-label">Frete</span>
+  <div class="frete-toggle">
+    <div class="frete-toggle-head">
+      <span class="frete-label">Frete incluso?</span>
+      <div class="toggle-wrap">
+        <button class="toggle-opt active" id="freteSimBtn" onclick="setFrete(true)">Sim</button>
+        <button class="toggle-opt" id="freteNaoBtn" onclick="setFrete(false)">Não</button>
+      </div>
+    </div>
+    <div class="frete-body" id="freteBody">
+      <div style="height:12px"></div>
+      <div class="fg"><label>Valor do frete ida+volta (R$)</label><input type="number" id="freteValor" placeholder="0,00" min="0" step="0.01" oninput="update()"></div>
+      <div class="fg"><label>Dias de frete</label><input type="number" id="freteDias" placeholder="Ex: 2" min="1" oninput="update()"></div>
+    </div>
+  </div>
+
+  <!-- DESCONTO -->
+  <div class="fg" style="margin-top:4px"><label>Desconto (R$)</label><input type="number" id="desconto" placeholder="0,00" min="0" step="0.01" oninput="update()"></div>
+
+  <div class="totais-box" id="totaisBox">
+    <div class="totais-row"><span>Subtotal equipamentos</span><span id="tSubtotal">R$ 0,00</span></div>
+    <div class="totais-row" id="trFrete" style="display:none"><span id="tFreteLabel">Frete</span><span id="tFrete">R$ 0,00</span></div>
+    <div class="totais-row" id="trDesc" style="display:none"><span>Desconto</span><span id="tDesc" style="color:#ff7070">— R$ 0,00</span></div>
+    <div class="totais-row total"><span>Total</span><span id="tTotal">R$ 0,00</span></div>
+  </div>
+
+  <div class="action-area">
+    <button class="btn btn-y" onclick="goTab(2,document.querySelectorAll('.tab')[2])">Revisar orçamento</button>
+  </div>
+</div>
+
+<!-- TAB 2: REVISÃO -->
+<div class="screen" id="screen2">
+  <div class="preview-note"><strong>Revise antes de enviar.</strong> Confira os dados abaixo e escolha como enviar ao cliente.</div>
+  <div class="preview-card"><h4>Cliente</h4><p id="prev_clienteInfo" style="white-space:pre-line">—</p></div>
+  <div class="preview-card"><h4>Equipamentos</h4><ul id="prev_itens"><li>Sem itens<span>—</span></li></ul></div>
+  <div class="total-preview"><span>Total</span><strong id="prev_total">R$ 0,00</strong></div>
+  <div class="preview-card"><h4>Condições</h4><p id="prev_cond" style="white-space:pre-line;color:rgba(255,255,255,0.6);font-size:14px;line-height:1.7">—</p></div>
+  <div class="action-area">
+    <button class="btn btn-g" onclick="enviarWA()">Enviar por WhatsApp</button>
+    <button class="btn btn-y" onclick="gerarPDF()">Gerar PDF + Contrato</button>
+    <button class="btn btn-o" onclick="salvarHistorico()">Salvar no histórico</button>
+  </div>
+</div>
+
+<!-- TAB 3: HISTÓRICO -->
+<div class="screen" id="screen3">
+  <span class="sec-label">Orçamentos salvos</span>
+  <div id="histList"></div>
+  <div class="action-area" style="margin-top:8px">
+    <button class="btn btn-o" onclick="if(confirm('Limpar todo o histórico?')){localStorage.removeItem('paiol_hist');renderHist();}">Limpar histórico</button>
+  </div>
+</div>
+
+</div><!-- /screens -->
+
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════════════════════════
+     PDF: PÁGINA 1 — ORÇAMENTO
+════════════════════════════════════ -->
+<div id="pdfDoc" style="position:fixed;left:-9999px;top:0;background:#fff;font-family:Arial,sans-serif;font-size:13px;color:#222;">
+
+  <!-- PÁGINA 1: ORÇAMENTO -->
+  <div style="width:794px;min-height:1050px;display:flex;flex-direction:column;page-break-after:always;">
+    <!-- Header -->
+    <div style="background:#1C1C1C;padding:32px 48px 24px;display:flex;justify-content:space-between;align-items:flex-end;">
+      <div>
+        <div style="font-weight:900;font-size:32px;color:#fff;line-height:1;letter-spacing:1px">PAIOL</div>
+        <div style="font-weight:900;font-size:20px;color:#F5C400;letter-spacing:6px">RENTAL</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:8px;line-height:1.6">
+          Rua Antônio Vanucci, 101 · Osasco – SP<br>
+          (11) 95426-7917 · paiola.abner@icloud.com
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:900;font-size:26px;color:#F5C400;letter-spacing:2px;text-transform:uppercase">Proposta de Locação</div>
+        <div id="pdf_num" style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px"></div>
+        <div id="pdf_date" style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px"></div>
+      </div>
+    </div>
+    <div style="background:#F5C400;height:4px"></div>
+
+    <!-- Body -->
+    <div style="padding:28px 48px;flex:1">
+
+      <!-- Cliente -->
+      <div style="margin-bottom:20px">
+        <div id="pdf_clienteName" style="font-weight:700;font-size:15px;text-decoration:underline;text-transform:uppercase;margin-bottom:8px"></div>
+        <div id="pdf_clienteInfo" style="font-size:13px;line-height:1.7;color:#333"></div>
+      </div>
+
+      <div style="font-size:13px;margin-bottom:16px">
+        <strong>Assunto:</strong> <span id="pdf_assunto">Proposta de Locação de Equipamentos</span>
+      </div>
+      <div style="font-size:13px;margin-bottom:20px;line-height:1.6">
+        Prezado(s) Senhores, conforme solicitado, apresentamos abaixo características, preços e condições gerais:<br>
+        Pelo presente, vimos propor-lhes a locação do(s) modelo(s) de equipamento(s) abaixo identificado(s):
+      </div>
+
+      <div style="font-weight:700;font-size:13px;margin-bottom:10px">Valor da locação:</div>
+
+      <!-- Tabela -->
+      <table id="pdf_table" style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px">
+        <thead>
+          <tr style="background:#1C1C1C">
+            <th style="color:#F5C400;padding:10px 12px;text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase">Modelo / Série</th>
+            <th style="color:#F5C400;padding:10px 12px;text-align:center;font-size:11px;letter-spacing:1px;text-transform:uppercase">Período</th>
+            <th style="color:#F5C400;padding:10px 12px;text-align:center;font-size:11px;letter-spacing:1px;text-transform:uppercase">Qtd</th>
+            <th style="color:#F5C400;padding:10px 12px;text-align:right;font-size:11px;letter-spacing:1px;text-transform:uppercase">Valor Unit.</th>
+            <th style="color:#F5C400;padding:10px 12px;text-align:right;font-size:11px;letter-spacing:1px;text-transform:uppercase">Valor Total</th>
+          </tr>
+        </thead>
+        <tbody id="pdf_tbody"></tbody>
+        <tfoot id="pdf_tfoot"></tfoot>
+      </table>
+
+      <div id="pdf_totalLine" style="font-weight:700;font-size:14px;margin-bottom:24px"></div>
+
+      <!-- Condições -->
+      <div style="margin-bottom:6px"><strong>Condições e Prazos:</strong></div>
+      <div style="font-size:13px;line-height:1.9">
+        Prazo para pagamento: <strong id="pdf_prazoPgto">—</strong><br>
+        Validade da Proposta: <strong id="pdf_validade">—</strong><br>
+        Forma de Pagamento: <strong id="pdf_pagamento">—</strong><br>
+        Endereço para entrega: <strong id="pdf_endEntrega">—</strong><br>
+        Frete Incluso: <strong id="pdf_freteInc">—</strong>
+      </div>
+
+      <div style="margin-top:20px;font-size:12px;color:#555;font-style:italic;line-height:1.6">
+        Em caso de frete não incluso, será de inteira responsabilidade da Locatária o transporte do equipamento de, e para, o depósito da Locadora, o que deverá ser realizado em dia útil (qualquer dia que não seja domingo ou Feriado) no horário de 8hs às 17hs.
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="background:#1C1C1C;padding:16px 48px;display:flex;justify-content:space-between;margin-top:auto">
+      <div style="font-size:11px;color:rgba(255,255,255,0.35)">Paiol Rental · Rua Antônio Vanucci, 101 · Osasco – SP</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.35)">(11) 95426-7917 · paiola.abner@icloud.com</div>
+    </div>
+  </div>
+
+  <!-- ════ PÁGINA 2+: CONTRATO ════ -->
+  <div style="width:794px;padding:48px;font-family:Arial,sans-serif;font-size:12px;line-height:1.7;color:#222;">
+
+    <div style="text-align:center;font-size:14px;font-weight:700;text-decoration:underline;margin-bottom:28px;text-transform:uppercase">
+      Contrato de Locação de Plataformas Aéreas
+    </div>
+
+    <p style="margin-bottom:14px">Pelo presente instrumento e na melhor forma de direito, de um lado:</p>
+
+    <p style="margin-bottom:14px"><strong>I. PAIOL RENTAL</strong>, pessoa jurídica de direito privado, inscrita sob o CNPJ sob o nº <strong>[CNPJ DA PAIOL RENTAL]</strong>, com sede social estabelecida na Rua Antônio Vanucci, 101 – Osasco, SP, neste ato representada de acordo com o seu Contrato Social por seu representante legal, doravante denominada <strong>"LOCADORA"</strong>;</p>
+
+    <p style="margin-bottom:6px">E, de outro lado,</p>
+    <p style="margin-bottom:14px"><strong id="ct_locataria">II. [NOME DO CLIENTE]</strong>, pessoa jurídica de direito privado, inscrita sob o CNPJ sob o nº <strong id="ct_cnpj">[CNPJ]</strong>, com sede social estabelecida em <strong id="ct_end">[ENDEREÇO]</strong>, neste ato representada de acordo com o seu Contrato Social por seu representante legal, doravante denominada(o) <strong>"LOCATÁRIA(O)"</strong>.</p>
+
+    <p style="margin-bottom:20px">Resolvem as Partes celebrar o presente Contrato de Locação de Plataformas Aéreas ("Contrato"), que prometem fielmente cumprir, mediante os seguintes termos e condições.</p>
+
+    <p style="font-weight:700;text-align:center;text-transform:uppercase;margin-bottom:8px">Cláusula Primeira — Objeto</p>
+    <p style="margin-bottom:14px"><strong>1.1</strong> O objeto do presente Contrato é o serviço de locação de máquinas, plataformas e equipamentos comerciais e industriais, sem operador, cujas especificações estão descritas nesta proposta de locação. A LOCATÁRIA se compromete em zelar pela integridade física e elétrica da máquina, com o intuito de finalizar a locação apenas tendo havido o desgaste do uso da mesma.</p>
+
+    <p style="font-weight:700;text-align:center;text-transform:uppercase;margin-bottom:8px">Cláusula Segunda — Endereço de Entrega</p>
+    <p style="margin-bottom:14px"><strong>2.1</strong> O endereço de entrega dos equipamentos locados consta especificado no endereço de entrega descrito na proposta de locação.</p>
+    <p style="margin-bottom:14px"><strong>2.2</strong> Os equipamentos serão entregues no local definido, mediante agendamento prévio, obedecendo a disponibilidade da transportadora.</p>
+
+    <p style="font-weight:700;text-align:center;text-transform:uppercase;margin-bottom:8px">Cláusula Terceira — Prazo de Vigência</p>
+    <p style="margin-bottom:6px"><strong>3.1</strong> O presente Contrato é firmado para vigorar pelo prazo de <strong id="ct_prazo">[PRAZO]</strong> dias, conforme descrito na proposta de locação.</p>
+    <p style="margin-bottom:6px"><strong>3.1.1</strong> O Contrato somente poderá ser renovado por acordo entre as partes, mediante a celebração de um aditamento ao Contrato.</p>
+    <p style="margin-bottom:14px"><strong>3.2.1</strong> A contratação do frete é realizada conforme indicado na proposta de locação.</p>
+
+    <p style="font-weight:700;text-align:center;text-transform:uppercase;margin-bottom:8px">Cláusula Quarta — Do Pagamento</p>
+    <p style="margin-bottom:6px"><strong>4.1</strong> A presente locação será remunerada pela quantia disposta na proposta de locação, referentes aos serviços efetivamente prestados.</p>
+    <p style="margin-bottom:6px"><strong>4.2</strong> A cobrança do aluguel será realizada conforme o prazo de pagamento negociado, a partir da data de emissão da fatura de locação.</p>
+    <p style="margin-bottom:6px"><strong>4.2.1</strong> Ficam esclarecidos que sábados, domingos e feriados inclusos no prazo da locação, o valor referente a estes dias não será descontado.</p>
+    <p style="margin-bottom:6px"><strong>4.3</strong> Caso não haja a devolução do equipamento ao final do prazo ajustado, o Contrato é automaticamente renovado por igual período de forma sucessiva, até que o locatário comunique por escrito o interesse de finalizar a locação.</p>
+    <p style="margin-bottom:14px"><strong>4.5</strong> No momento da entrega/retirada dos equipamentos é obrigatória a assinatura e devolução do canhoto da nota fiscal de remessa devidamente datado, assinado e carimbado.</p>
+
+    <p style="font-weight:700;text-align:center;text-transform:uppercase;margin-bottom:8px">Cláusula Quinta — Do Reajuste</p>
+    <p style="margin-bottom:14px"><strong>5.1</strong> Em caso do presente Contrato superar o período de 12 (doze) meses, o valor da locação sofrerá reajuste com base na variação do IGP-M calculado pela FGV, variação esta a ser aplicada na data base deste Contrato.</p>
+
+    <p style="font-weight:700;text-align:center;text-transform:uppercase;margin-bottom:8px">Cláusula Sexta — Do Inadimplemento e da Mora</p>
+    <p style="margin-bottom:6px"><strong>6.1</strong> Em caso de não cumprimento do Contrato, a LOCATÁRIA será constituída em mora, ficando obrigada a restituir o bem no prazo máximo de 48 (quarenta e oito) horas, sob pena de busca e apreensão.</p>
+    <p style="margin-bottom:14px"><strong>6.2</strong> O atraso no pagamento ocasionará correção monetária sobre o valor devido, juros de 1% (um por cento) ao mês, e multa de 5% (cinco por cento) sobre o valor das parcelas em atraso, além de honorários advocatícios no valor de 20% (vinte por cento) do débito.</p>
+
+    <p style="font-weight:700;text-align:center;text-transform:uppercase;margin-bottom:8px">Cláusula Sétima — Rescisão</p>
+    <p style="margin-bottom:6px"><strong>7.1</strong> Este Contrato poderá ser rescindido pelas partes, sem ônus, mediante notificação por escrito à outra parte, com antecedência mínima de 30 (trinta) dias.</p>
+    <p style="margin-bottom:14px"><strong>7.2</strong> O presente Contrato será considerado encerrado após a devolução total dos equipamentos acompanhados da documentação fiscal exigida por lei.</p>
+
+    <p style="font-weight:700;text-align:center;text-transform:uppercase;margin-bottom:8px">Cláusula Oitava — Conservação e Manutenção</p>
+    <p style="margin-bottom:6px"><strong>8.1</strong> É de responsabilidade exclusiva da LOCATÁRIA a guarda, manutenção, conservação, embarque e desembarque do equipamento locado, desde o momento de sua retirada até a sua devolução.</p>
+    <p style="margin-bottom:6px"><strong>8.3</strong> A LOCATÁRIA declara receber o equipamento em perfeito estado de conservação, obrigando-se a realizar o abastecimento, conserto e calibragem necessários, bem como indenizar peças danificadas por má utilização.</p>
+    <p style="margin-bottom:14px"><strong>8.4</strong> A LOCATÁRIA responderá por todo e qualquer dano ou avaria causados aos equipamentos locados.</p>
+
+    <p style="font-weight:700;text-align:center;text-transform:uppercase;margin-bottom:8px">Cláusula Nona — Curso de Operação</p>
+    <p style="margin-bottom:14px"><strong>9.1</strong> A LOCADORA oferece, sem custo, o curso de operação das plataformas locadas. É facultativo à LOCATÁRIA a realização do curso; caso opte pela não realização, a LOCADORA não se responsabiliza por danos causados.</p>
+
+    <p style="font-weight:700;text-align:center;text-transform:uppercase;margin-bottom:8px">Cláusula Décima — Do Foro</p>
+    <p style="margin-bottom:28px"><strong>10.1</strong> Fica eleito o foro da cidade de Osasco, Estado de São Paulo, para que sejam resolvidas as questões oriundas do presente Contrato.</p>
+
+    <p style="margin-bottom:32px">E, por estarem de pleno acordo, as Partes assinam o presente Contrato em 02 (duas) vias de igual teor e forma.</p>
+    <p style="margin-bottom:40px"><strong>Osasco, <span id="ct_dataAssinatura"></span></strong></p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:40px">
+      <div style="text-align:center">
+        <div style="border-bottom:1px solid #333;height:52px;margin-bottom:8px"></div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px"><strong>Paiol Rental</strong><br>Locadora</div>
+      </div>
+      <div style="text-align:center">
+        <div style="border-bottom:1px solid #333;height:52px;margin-bottom:8px"></div>
+        <div id="ct_signLocataria" style="font-size:11px;text-transform:uppercase;letter-spacing:1px"><strong>[Cliente]</strong><br>Locatária</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:8px"><strong>Testemunhas:</strong></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:40px">
+      <div>
+        <div style="border-bottom:1px solid #aaa;margin-bottom:4px;height:36px"></div>
+        <div style="font-size:11px;color:#666">1. Nome: _________________ CPF: _____________</div>
+      </div>
+      <div>
+        <div style="border-bottom:1px solid #aaa;margin-bottom:4px;height:36px"></div>
+        <div style="font-size:11px;color:#666">2. Nome: _________________ CPF: _____________</div>
+      </div>
+    </div>
+
+    <!-- Questionário -->
+    <div style="text-align:center;font-size:13px;font-weight:700;text-decoration:underline;margin-bottom:16px">Questionário</div>
+    <div style="font-size:12px;line-height:2.2;color:#333">
+      1. Qual CNPJ para faturamento? _______________________________________________<br>
+      2. Endereço da Obra para entrega e retirada do equipamento? ____________________<br>
+      3. Precisa de treinamento? Se sim, para quantas pessoas? _______________________<br>
+      4. Qual o e-mail de envio de fatura e cobrança? _________________________________<br>
+      5. Contato e telefone do responsável no local? __________________________________<br>
+      6. Comentários: ____________________________________________________________
+    </div>
+
+    <div style="text-align:center;margin-top:32px;padding-top:20px;border-top:1px solid #ddd">
+      <div style="font-size:12px;font-weight:700">PAIOL RENTAL</div>
+      <div style="font-size:11px;color:#555">paiola.abner@icloud.com · Tel: (11) 95426-7917</div>
+    </div>
+
+  </div>
+</div><!-- /pdfDoc -->
+
+<script>
+// ── TABELA DE PREÇOS (baseada na Altus Rental) ──
+const TABELA = {
+  'Tesoura': {
+    '8m':  {Diária:700,  '3 dias':1600, '7 dias':2000, '10 dias':2200, '15 dias':2500, '20 dias':2800, Mensal:3200},
+    '10m': {Diária:800,  '3 dias':1800, '7 dias':2200, '10 dias':2400, '15 dias':2700, '20 dias':3000, Mensal:3400},
+    '12m': {Diária:1200, '3 dias':2400, '7 dias':2700, '10 dias':2900, '15 dias':3300, '20 dias':3700, Mensal:4300},
+    '14m': {Diária:1600, '3 dias':2900, '7 dias':3400, '10 dias':3900, '15 dias':4500, '20 dias':6500, Mensal:7200},
+  },
+  'Articulada Elétrica': {
+    '12m': {Diária:1750, '3 dias':3500, '7 dias':4500, '10 dias':5000, '15 dias':7500, '20 dias':9500, Mensal:11500},
+    '15m': {Diária:1900, '3 dias':4000, '7 dias':5600, '10 dias':6000, '15 dias':9000, '20 dias':12000, Mensal:14500},
+  },
+  '36AM': {
+    '12m': {Diária:700, '3 dias':1200, '7 dias':1600, '10 dias':1900, '15 dias':2200, '20 dias':2500, Mensal:2900},
+  },
+  'AWP-25S': {
+    '9.6m': {Diária:650, '3 dias':1050, '7 dias':1350, '10 dias':1750, '15 dias':2050, '20 dias':2450, Mensal:2800},
+  },
+};
+
+const EQUIPAMENTOS = ['Tesoura','Articulada Elétrica','36AM','AWP-25S','Empilhadeira a GLP','Empilhadeira Diesel','Empilhadeira Elétrica','Transpaleteira','Outro'];
+const ALTURAS_POR_EQUIP = {
+  'Tesoura': ['8m','10m','12m','14m'],
+  'Articulada Elétrica': ['12m','15m'],
+  '36AM': ['12m'],
+  'AWP-25S': ['9.6m'],
+  'Empilhadeira a GLP': ['—'],
+  'Empilhadeira Diesel': ['—'],
+  'Empilhadeira Elétrica': ['—'],
+  'Transpaleteira': ['—'],
+  'Outro': ['—'],
+};
+const PERIODOS = ['Diária','3 dias','7 dias','10 dias','15 dias','20 dias','Mensal','A combinar'];
+
 let items = [];
+let freteIncluso = true;
 let currentOrcNum = gerarNum();
 
-// ── INIT ──
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('orcNum').value = currentOrcNum;
   document.getElementById('topNum').textContent = currentOrcNum;
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('dateStart').value = today;
+  document.getElementById('dateStart').value = new Date().toISOString().split('T')[0];
   addItem();
   renderHist();
   checkInstallBanner();
   update();
-
-  // PWA service worker
   if ('serviceWorker' in navigator) {
-    const sw = `
-      self.addEventListener('install', e => e.waitUntil(
-        caches.open('paiol-v1').then(c => c.addAll([]))
-      ));
-      self.addEventListener('fetch', e => e.respondWith(
-        caches.match(e.request).then(r => r || fetch(e.request))
-      ));
-    `;
-    const blob = new Blob([sw], {type:'application/javascript'});
-    navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+    const sw = `self.addEventListener('install',e=>e.waitUntil(caches.open('paiol-v2').then(c=>c.addAll([]))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
+    navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
   }
 });
 
 function gerarNum() {
   const y = new Date().getFullYear();
   const hist = JSON.parse(localStorage.getItem('paiol_hist')||'[]');
-  const n = String(hist.length + 1).padStart(3,'0');
-  return `${n}/${y}`;
+  return String(hist.length+1).padStart(3,'0')+'/'+y;
 }
 
 function syncNum() {
   currentOrcNum = document.getElementById('orcNum').value;
-  document.getElementById('topNum').textContent = currentOrcNum || '—';
+  document.getElementById('topNum').textContent = currentOrcNum||'—';
+}
+
+// ── FRETE TOGGLE ──
+function setFrete(sim) {
+  freteIncluso = sim;
+  document.getElementById('freteSimBtn').classList.toggle('active', sim);
+  document.getElementById('freteNaoBtn').classList.toggle('active', !sim);
+  const body = document.getElementById('freteBody');
+  body.classList.toggle('show', !sim);
+  if (sim) {
+    document.getElementById('freteValor').value = '';
+    document.getElementById('freteDias').value = '';
+  }
+  update();
 }
 
 // ── TABS ──
 function goTab(idx, btn) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===idx));
-  document.querySelectorAll('.screen').forEach((s,i) => s.classList.toggle('active', i===idx));
-  if (idx === 2) buildPreview();
-  if (idx === 3) renderHist();
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.screen').forEach((s,i)=>s.classList.toggle('active',i===idx));
+  if (idx===2) buildPreview();
+  if (idx===3) renderHist();
 }
 
-// ── ITEMS ──
+// ── ADD ITEM ──
 function addItem() {
-  const id = Date.now();
-  items.push({id, eq: EQUIPAMENTOS[0], per: 'Mensal', qtd: 1, val: 0});
+  items.push({id:Date.now(), eq:EQUIPAMENTOS[0], alt:'10m', per:'Mensal', qtd:1, val:0});
   renderItems();
 }
 
 function removeItem(id) {
-  items = items.filter(i => i.id !== id);
-  renderItems();
-  update();
+  items = items.filter(i=>i.id!==id);
+  renderItems(); update();
 }
 
 function updateItem(id, field, v) {
-  const item = items.find(i => i.id === id);
+  const item = items.find(i=>i.id===id);
   if (!item) return;
-  if (field === 'qtd') item.qtd = parseInt(v)||1;
-  else if (field === 'val') item.val = parseFloat(v)||0;
+  if (field==='qtd') item.qtd = parseInt(v)||1;
+  else if (field==='val') item.val = parseFloat(v)||0;
   else item[field] = v;
-  // update subtotal display
-  const subEl = document.getElementById(`sub_${id}`);
-  if (subEl) subEl.textContent = fmt(item.qtd * item.val);
+
+  // Se mudou equipamento, recalcula alturas e tenta sugerir preço
+  if (field==='eq') {
+    const alturas = ALTURAS_POR_EQUIP[v]||['—'];
+    item.alt = alturas[0];
+    // re-render para atualizar select de altura
+    renderItems();
+  }
+
+  // Sugestão de preço automática
+  if (['eq','alt','per'].includes(field)) {
+    const sugestao = getPreco(item.eq, item.alt, item.per);
+    if (sugestao > 0) {
+      item.val = sugestao;
+      // atualiza input de valor visualmente
+      const valEl = document.getElementById('val_'+id);
+      if (valEl) valEl.value = sugestao;
+    }
+    const hintEl = document.getElementById('hint_'+id);
+    if (hintEl) {
+      hintEl.textContent = sugestao > 0 ? `Preço sugerido: ${fmt(sugestao)} (editável)` : '';
+    }
+  }
+
+  const subEl = document.getElementById('sub_'+id);
+  if (subEl) subEl.textContent = fmt(item.qtd*item.val);
   update();
+}
+
+function getPreco(eq, alt, per) {
+  try { return TABELA[eq][alt][per]||0; } catch(e) { return 0; }
 }
 
 function renderItems() {
   const list = document.getElementById('itemsList');
-  if (items.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:32px;color:rgba(255,255,255,0.3);font-size:14px">Nenhum item adicionado</div>';
+  if (!items.length) {
+    list.innerHTML='<div style="text-align:center;padding:32px;color:rgba(255,255,255,0.3);font-size:14px">Nenhum item</div>';
     return;
   }
-  list.innerHTML = items.map((item, idx) => `
-    <div class="item-card">
-      <div class="item-card-head">
-        <span class="item-idx">Item ${String(idx+1).padStart(2,'0')}</span>
-        <button class="remove-btn" onclick="removeItem(${item.id})">✕</button>
-      </div>
+  list.innerHTML = items.map((item,idx)=>{
+    const alturas = ALTURAS_POR_EQUIP[item.eq]||['—'];
+    const hasAlt = alturas[0]!=='—';
+    const sugestao = getPreco(item.eq, item.alt, item.per);
+    return `<div class="item-card">
+      <div class="item-card-head"><span class="item-idx">Item ${String(idx+1).padStart(2,'0')}</span><button class="rm-btn" onclick="removeItem(${item.id})">✕</button></div>
       <div class="fg">
         <label>Equipamento</label>
         <select onchange="updateItem(${item.id},'eq',this.value)">
           ${EQUIPAMENTOS.map(e=>`<option${e===item.eq?' selected':''}>${e}</option>`).join('')}
         </select>
       </div>
-      <div class="item-grid">
+      ${hasAlt ? `<div class="fg">
+        <label>Altura de trabalho</label>
+        <select id="alt_${item.id}" onchange="updateItem(${item.id},'alt',this.value)">
+          ${alturas.map(a=>`<option${a===item.alt?' selected':''}>${a}</option>`).join('')}
+        </select>
+      </div>` : ''}
+      <div class="item-row2">
         <div class="fg">
           <label>Período</label>
           <select onchange="updateItem(${item.id},'per',this.value)">
@@ -784,317 +628,265 @@ function renderItems() {
       </div>
       <div class="fg">
         <label>Valor unitário (R$)</label>
-        <input type="number" min="0" step="0.01" value="${item.val||''}" placeholder="0,00" onchange="updateItem(${item.id},'val',this.value)">
+        <input type="number" id="val_${item.id}" min="0" step="0.01" value="${item.val||''}" placeholder="0,00" onchange="updateItem(${item.id},'val',this.value)">
+        <div class="preco-hint" id="hint_${item.id}">${sugestao>0?`Preço sugerido: ${fmt(sugestao)} (editável)`:''}</div>
       </div>
       <div class="item-sub">Subtotal: <span id="sub_${item.id}">${fmt(item.qtd*item.val)}</span></div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
-// ── UPDATE TOTAIS ──
+// ── DDL ──
 function calcDDL() {
-  const ds = g('dateStart'), de = g('dateEnd');
-  if (!ds || !de) return null;
-  const start = new Date(ds + 'T12:00:00');
-  const end   = new Date(de + 'T12:00:00');
-  const dias  = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
-  if (dias < 1) return null;
-  if (dias <= 14) return { dias, prazo: '15 DDL', label: '1 a 14 dias de locação' };
-  if (dias <= 30) return { dias, prazo: '28 DDL', label: '15 a 30 dias de locação' };
-  return { dias, prazo: 'A combinar', label: `${dias} dias de locação` };
+  const ds=g('dateStart'),de=g('dateEnd');
+  if (!ds||!de) return null;
+  const dias = Math.round((new Date(de+'T12:00:00')-new Date(ds+'T12:00:00'))/(86400000))+1;
+  if (dias<1) return null;
+  if (dias<=14) return {dias,prazo:'15 DDL',label:`${dias} dias de locação (1–14 dias)`};
+  if (dias<=30) return {dias,prazo:'28 DDL',label:`${dias} dias de locação (15–30 dias)`};
+  return {dias,prazo:'A combinar',label:`${dias} dias de locação`};
 }
+
+// ── UPDATE ──
 function update() {
-  const sub = items.reduce((s,i) => s + i.qtd*i.val, 0);
-  const fr  = parseFloat(document.getElementById('frete')?.value)||0;
-  const dc  = parseFloat(document.getElementById('desconto')?.value)||0;
-  const tot = sub + fr - dc;
+  const sub = items.reduce((s,i)=>s+i.qtd*i.val,0);
+  const frV = freteIncluso ? 0 : (parseFloat(document.getElementById('freteValor')?.value)||0);
+  const frD = freteIncluso ? 1 : (parseInt(document.getElementById('freteDias')?.value)||1);
+  const frTotal = frV * frD;
+  const dc = parseFloat(document.getElementById('desconto')?.value)||0;
+  const tot = sub + frTotal - dc;
 
-  setText('tSubtotal', fmt(sub));
-  setText('tTotal', fmt(tot));
-  const trF = document.getElementById('trFrete');
-  const trD = document.getElementById('trDesc');
-  if (trF) { trF.style.display = fr > 0 ? 'flex' : 'none'; setText('tFrete', fmt(fr)); }
-  if (trD) { trD.style.display = dc > 0 ? 'flex' : 'none'; setText('tDesc', `— ${fmt(dc)}`); }
+  setText('tSubtotal',fmt(sub));
+  setText('tTotal',fmt(tot));
+  const trF=document.getElementById('trFrete');
+  const trD2=document.getElementById('trDesc');
+  if (trF) { trF.style.display=frTotal>0?'flex':'none'; setText('tFrete',fmt(frTotal)); setText('tFreteLabel',`Frete (${frD} dia${frD>1?'s':''})`); }
+  if (trD2){ trD2.style.display=dc>0?'flex':'none'; setText('tDesc',`— ${fmt(dc)}`); }
 
-  // DDL automático
-  const ddl = calcDDL();
-  const ddlBox = document.getElementById('ddlBox');
-  if (ddlBox) {
-    if (ddl) {
-      ddlBox.style.display = 'block';
-      setText('ddlDias', ddl.label);
-      setText('ddlPrazo', ddl.prazo);
-    } else {
-      ddlBox.style.display = 'none';
-    }
-  }
+  // DDL
+  const ddl=calcDDL();
+  const ddlBox=document.getElementById('ddlBox');
+  if (ddlBox){ ddlBox.style.display=ddl?'block':'none'; if(ddl){setText('ddlDias',ddl.label);setText('ddlPrazo',ddl.prazo);} }
 }
 
 // ── PREVIEW ──
 function buildPreview() {
-  const name  = g('clientName');
-  const doc   = g('clientDoc');
-  const phone = g('clientPhone');
-  const email = g('clientEmail');
-  const addr  = g('clientAddr');
+  const name=g('clientName')||'—';
+  const doc=g('clientDoc'),phone=g('clientPhone'),email=g('clientEmail');
+  let ci=name;
+  if(doc)ci+='\n'+doc; if(phone)ci+='\n'+phone; if(email)ci+='\n'+email;
+  setText('prev_clienteInfo',ci);
 
-  let cInfo = name || '—';
-  if (doc)   cInfo += `\n${doc}`;
-  if (phone) cInfo += `\n${phone}`;
-  if (email) cInfo += `\n${email}`;
-  document.getElementById('prev_clienteInfo').style.whiteSpace = 'pre-line';
-  setText('prev_clienteInfo', cInfo);
+  const ul=document.getElementById('prev_itens');
+  if(!items.length){ul.innerHTML='<li>Sem itens<span>—</span></li>';}
+  else{ul.innerHTML=items.map(i=>`<li>${i.qtd}x ${i.eq}${i.alt&&i.alt!=='—'?' '+i.alt:''} (${i.per})<span>${fmt(i.qtd*i.val)}</span></li>`).join('');}
 
-  const prevItens = document.getElementById('prev_itens');
-  if (items.length === 0) {
-    prevItens.innerHTML = '<li style="color:rgba(255,255,255,0.3)">Nenhum item<span>—</span></li>';
-  } else {
-    prevItens.innerHTML = items.map(i =>
-      `<li>${i.qtd}x ${i.eq} (${i.per})<span>${fmt(i.qtd*i.val)}</span></li>`
-    ).join('');
-  }
+  const sub=items.reduce((s,i)=>s+i.qtd*i.val,0);
+  const frV=freteIncluso?0:(parseFloat(document.getElementById('freteValor')?.value)||0);
+  const frD=freteIncluso?1:(parseInt(document.getElementById('freteDias')?.value)||1);
+  const dc=parseFloat(document.getElementById('desconto')?.value)||0;
+  setText('prev_total',fmt(sub+frV*frD-dc));
 
-  const sub = items.reduce((s,i) => s + i.qtd*i.val, 0);
-  const fr  = parseFloat(document.getElementById('frete')?.value)||0;
-  const dc  = parseFloat(document.getElementById('desconto')?.value)||0;
-  setText('prev_total', fmt(sub + fr - dc));
-
-  const ds = g('dateStart'), de = g('dateEnd');
-  const periodo = ds && de ? `${fmtDate(new Date(ds+'T12:00:00'))} até ${fmtDate(new Date(de+'T12:00:00'))}` : ds ? `A partir de ${fmtDate(new Date(ds+'T12:00:00'))}` : '—';
-  const ddl = calcDDL();
-  const ddlTxt = ddl ? `\nPrazo de pagamento: ${ddl.prazo} (${ddl.label})` : '';
+  const ds=g('dateStart'),de=g('dateEnd');
+  const per=ds&&de?`${fmtDate(new Date(ds+'T12:00:00'))} até ${fmtDate(new Date(de+'T12:00:00'))}`:ds?`A partir de ${fmtDate(new Date(ds+'T12:00:00'))}` :'—';
+  const ddl=calcDDL();
   setText('prev_cond',
-    `Período: ${periodo}\nValidade: ${document.getElementById('validade').value}\nForma de pagamento: ${document.getElementById('pagamento').value}${ddlTxt}${addr ? '\nEntrega: '+addr : ''}`
+    `Período: ${per}\nValidade: ${document.getElementById('validade').value}\nForma de pagamento: ${document.getElementById('pagamento').value}`+
+    (ddl?`\nPrazo de pagamento: ${ddl.prazo}`:'') +
+    `\nFrete: ${freteIncluso?'Incluso':'Não incluso'}` +
+    (g('clientAddr')?'\nEntrega: '+g('clientAddr'):'')
   );
-  document.getElementById('prev_cond').style.whiteSpace = 'pre-line';
-  document.getElementById('prev_cond').style.color = 'rgba(255,255,255,0.6)';
-  document.getElementById('prev_cond').style.fontSize = '14px';
-  document.getElementById('prev_cond').style.lineHeight = '1.7';
 }
 
 // ── WHATSAPP ──
 function enviarWA() {
-  const nome  = g('clientName') || 'cliente';
-  const phone = g('clientPhone').replace(/\D/g,'');
-  const sub   = items.reduce((s,i) => s + i.qtd*i.val, 0);
-  const fr    = parseFloat(document.getElementById('frete')?.value)||0;
-  const dc    = parseFloat(document.getElementById('desconto')?.value)||0;
-  const tot   = sub + fr - dc;
-  const num   = g('orcNum') || currentOrcNum;
-
-  const linhas = items.map(i => `  • ${i.eq} (${i.per} x${i.qtd}) — ${fmt(i.qtd*i.val)}`).join('\n');
-
-  const ddl = calcDDL();
-  const msg = `*Orçamento Paiol Rental — Nº ${num}*\n\n` +
-    `Olá *${nome}*! Segue o orçamento solicitado:\n\n` +
-    `*Equipamentos:*\n${linhas}\n\n` +
-    (fr > 0 ? `*Frete:* ${fmt(fr)}\n` : '') +
-    (dc > 0 ? `*Desconto:* — ${fmt(dc)}\n` : '') +
-    `*Total: ${fmt(tot)}*\n\n` +
-    `*Validade:* ${document.getElementById('validade').value}\n` +
-    `*Forma de pagamento:* ${document.getElementById('pagamento').value}\n` +
-    (ddl ? `*Prazo de pagamento:* ${ddl.prazo}\n` : '') +
-    `\nQualquer dúvida estou à disposição!\n_Paiol Rental — (11) 95426-7917_`;
-
-  const dest = phone ? (phone.startsWith('55') ? phone : '55'+phone) : '5511954267917';
-  window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`, '_blank');
+  const nome=g('clientName')||'cliente';
+  const phone=g('clientPhone').replace(/\D/g,'');
+  const sub=items.reduce((s,i)=>s+i.qtd*i.val,0);
+  const frV=freteIncluso?0:(parseFloat(document.getElementById('freteValor')?.value)||0);
+  const frD=freteIncluso?1:(parseInt(document.getElementById('freteDias')?.value)||1);
+  const dc=parseFloat(document.getElementById('desconto')?.value)||0;
+  const tot=sub+frV*frD-dc;
+  const ddl=calcDDL();
+  const linhas=items.map(i=>`  • ${i.eq}${i.alt&&i.alt!=='—'?' '+i.alt:''} (${i.per} x${i.qtd}) — ${fmt(i.qtd*i.val)}`).join('\n');
+  const msg=`*Proposta de Locação — Paiol Rental*\n*Nº ${currentOrcNum}*\n\nOlá *${nome}*!\n\n*Equipamentos:*\n${linhas}\n\n`+
+    (frV>0?`*Frete:* ${fmt(frV*frD)}\n`:'')+
+    (dc>0?`*Desconto:* — ${fmt(dc)}\n`:'')+
+    `*Total: ${fmt(tot)}*\n\n`+
+    `*Validade:* ${document.getElementById('validade').value}\n`+
+    `*Pagamento:* ${document.getElementById('pagamento').value}\n`+
+    (ddl?`*Prazo:* ${ddl.prazo}\n`:'')+
+    `*Frete:* ${freteIncluso?'Incluso':'Não incluso'}\n\n`+
+    `Qualquer dúvida estou à disposição!\n_Paiol Rental — (11) 95426-7917_`;
+  const dest=phone?(phone.startsWith('55')?phone:'55'+phone):'5511954267917';
+  window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 
 // ── PDF ──
 function gerarPDF() {
-  const num = g('orcNum') || currentOrcNum;
-  const sub = items.reduce((s,i) => s + i.qtd*i.val, 0);
-  const fr  = parseFloat(document.getElementById('frete')?.value)||0;
-  const dc  = parseFloat(document.getElementById('desconto')?.value)||0;
-  const tot = sub + fr - dc;
+  const num=g('orcNum')||currentOrcNum;
+  const sub=items.reduce((s,i)=>s+i.qtd*i.val,0);
+  const frV=freteIncluso?0:(parseFloat(document.getElementById('freteValor')?.value)||0);
+  const frD=freteIncluso?1:(parseInt(document.getElementById('freteDias')?.value)||1);
+  const frTotal=frV*frD;
+  const dc=parseFloat(document.getElementById('desconto')?.value)||0;
+  const tot=sub+frTotal-dc;
+  const ddl=calcDDL();
+  const name=g('clientName')||'—';
 
-  setText('pdf_num', `Nº ${num}`);
-  setText('pdf_date', `Emitido em ${fmtDate(new Date())}`);
+  setText('pdf_num','Nº '+num);
+  setText('pdf_date','Emitido em '+fmtDate(new Date()));
 
-  const name  = g('clientName');
-  const doc   = g('clientDoc');
-  const phone = g('clientPhone');
-  const email = g('clientEmail');
-  let cHtml = `<strong>${name||'—'}</strong>`;
-  if (doc)   cHtml += `<br>${doc}`;
-  if (phone) cHtml += `<br>${phone}`;
-  if (email) cHtml += `<br>${email}`;
-  document.getElementById('pdf_cliente').innerHTML = cHtml;
-  setText('pdf_addr', g('clientAddr') || '—');
-  setText('pdf_validade', `Válido por ${document.getElementById('validade').value}`);
+  // Cliente
+  document.getElementById('pdf_clienteName').textContent=name;
+  let cHtml='';
+  if(g('clientDoc'))cHtml+=`<strong>CNPJ/CPF:</strong> ${g('clientDoc')}`;
+  if(g('clientContact'))cHtml+=` &nbsp;<strong>A/C:</strong> ${g('clientContact')}`;
+  if(g('clientPhone'))cHtml+=`<br><strong>Telefone:</strong> ${g('clientPhone')}`;
+  if(g('clientEmail'))cHtml+=` &nbsp;<strong>E-mail:</strong> ${g('clientEmail')}`;
+  document.getElementById('pdf_clienteInfo').innerHTML=cHtml||'—';
+  setText('pdf_assunto',g('obs')||'Proposta de Locação de Equipamentos');
 
-  // tabela
-  const tbody = document.getElementById('pdf_tbody');
-  tbody.innerHTML = items.map((item, i) => `
-    <tr style="background:${i%2===0?'#fff':'#fafafa'};border-bottom:1px solid #f0f0f0">
-      <td style="padding:12px 14px;font-size:13px"><strong>${item.eq}</strong></td>
-      <td style="padding:12px 14px;font-size:13px">${item.per}</td>
-      <td style="padding:12px 14px;font-size:13px;text-align:center">${item.qtd}</td>
-      <td style="padding:12px 14px;font-size:13px;text-align:right">${fmt(item.val)}</td>
-      <td style="padding:12px 14px;font-size:13px;text-align:right;font-weight:600">${fmt(item.qtd*item.val)}</td>
-    </tr>
-  `).join('');
+  // Tabela de itens
+  const tbody=document.getElementById('pdf_tbody');
+  tbody.innerHTML=items.map((item,i)=>`
+    <tr style="background:${i%2===0?'#fff':'#f9f9f9'};border-bottom:1px solid #eee">
+      <td style="padding:10px 12px"><strong>${item.eq}${item.alt&&item.alt!=='—'?' – '+item.alt:''}</strong></td>
+      <td style="padding:10px 12px;text-align:center">${item.per === 'Mensal' ? '30 DIAS' : item.per.toUpperCase()}</td>
+      <td style="padding:10px 12px;text-align:center">0${item.qtd}</td>
+      <td style="padding:10px 12px;text-align:right">${fmt(item.val)}</td>
+      <td style="padding:10px 12px;text-align:right;font-weight:700">${fmt(item.qtd*item.val)}</td>
+    </tr>`).join('');
 
-  let tfootHtml = `<tr style="background:#f5f5f5"><td colspan="4" style="padding:10px 14px;text-align:right;color:#666">Subtotal</td><td style="padding:10px 14px;text-align:right;font-weight:600">${fmt(sub)}</td></tr>`;
-  if (fr > 0) tfootHtml += `<tr style="background:#f5f5f5"><td colspan="4" style="padding:10px 14px;text-align:right;color:#666">Frete</td><td style="padding:10px 14px;text-align:right">${fmt(fr)}</td></tr>`;
-  if (dc > 0) tfootHtml += `<tr style="background:#f5f5f5"><td colspan="4" style="padding:10px 14px;text-align:right;color:#666">Desconto</td><td style="padding:10px 14px;text-align:right;color:#c00">— ${fmt(dc)}</td></tr>`;
-  tfootHtml += `<tr style="background:#1C1C1C"><td colspan="4" style="padding:12px 14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#F5C400">Total</td><td style="padding:12px 14px;text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#F5C400">${fmt(tot)}</td></tr>`;
-  document.getElementById('pdf_tfoot').innerHTML = tfootHtml;
-
-  const ds = g('dateStart'), de = g('dateEnd');
-  setText('pdf_periodo', ds && de ? `${fmtDate(new Date(ds+'T12:00:00'))} até ${fmtDate(new Date(de+'T12:00:00'))}` : ds ? `A partir de ${fmtDate(new Date(ds+'T12:00:00'))}` : '—');
-  setText('pdf_pag', document.getElementById('pagamento').value);
-
-  // DDL no PDF
-  const ddl = calcDDL();
-  const pdfPagEl = document.getElementById('pdf_pag');
-  if (pdfPagEl && ddl) {
-    pdfPagEl.innerHTML = `${document.getElementById('pagamento').value}<br><span style="font-size:12px;color:#555;">Prazo: <strong style="color:#1C1C1C">${ddl.prazo}</strong> — ${ddl.label}</span>`;
+  // Frete na tabela se não incluso
+  let tfootHtml='';
+  if (!freteIncluso && frTotal>0) {
+    tfootHtml+=`<tr style="background:#f9f9f9;border-bottom:1px solid #eee">
+      <td style="padding:10px 12px"><strong>Frete ida / volta</strong></td>
+      <td style="padding:10px 12px;text-align:center">${frD > 1 ? frD+' DIAS' : '01 DIA'}</td>
+      <td style="padding:10px 12px;text-align:center">0${frD}</td>
+      <td style="padding:10px 12px;text-align:right">${fmt(frV)}</td>
+      <td style="padding:10px 12px;text-align:right;font-weight:700">${fmt(frTotal)}</td>
+    </tr>`;
   }
+  if (dc>0) {
+    tfootHtml+=`<tr style="background:#fff8f8;border-bottom:1px solid #eee">
+      <td colspan="4" style="padding:10px 12px;text-align:right;color:#888">Desconto</td>
+      <td style="padding:10px 12px;text-align:right;color:#c00;font-weight:700">— ${fmt(dc)}</td>
+    </tr>`;
+  }
+  document.getElementById('pdf_tfoot').innerHTML=tfootHtml;
+  setText('pdf_totalLine',`Valor Total: ${fmt(tot)}`);
 
-  const obs = g('obs');
-  document.getElementById('pdf_obs_box').style.display = obs ? 'block' : 'none';
-  setText('pdf_obs', obs);
-  setText('pdf_signClient', (g('clientName')||'Cliente') + ' · Responsável');
+  // Condições
+  setText('pdf_prazoPgto', ddl ? ddl.prazo : (g('dateStart')&&g('dateEnd') ? 'A combinar' : '—'));
+  setText('pdf_validade', `Esta proposta tem validade de ${document.getElementById('validade').value}`);
+  setText('pdf_pagamento', document.getElementById('pagamento').value);
+  setText('pdf_endEntrega', g('clientAddr')||'A confirmar');
+  setText('pdf_freteInc', freteIncluso ? '(x) Sim  ( ) Não' : '( ) Sim  (x) Não');
 
-  const clientName = g('clientName') || 'orcamento';
+  // Contrato
+  setText('ct_locataria', `II. ${name.toUpperCase()}`);
+  setText('ct_cnpj', g('clientDoc')||'[CNPJ]');
+  setText('ct_end', g('clientAddr')||'[ENDEREÇO]');
+  const ds=g('dateStart'),de=g('dateEnd');
+  const diasLoc = ds&&de ? Math.round((new Date(de+'T12:00:00')-new Date(ds+'T12:00:00'))/86400000)+1 : 30;
+  setText('ct_prazo', String(diasLoc));
+  setText('ct_dataAssinatura', fmtDate(new Date()));
+  setText('ct_signLocataria', `${name}\nLocatária`);
+
+  const filename=`Proposta_PaiolRental_${name.replace(/\s+/g,'_')}_${num.replace('/','_')}.pdf`;
   html2pdf().set({
-    margin: 0,
-    filename: `Orcamento_PaiolRental_${clientName.replace(/\s+/g,'_')}_${num.replace('/','_')}.pdf`,
-    image: { type: 'jpeg', quality: 0.97 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' }
-  }).from(document.getElementById('pdfDoc')).save();
-
-  showToast('PDF gerado!');
+    margin:0,
+    filename,
+    image:{type:'jpeg',quality:0.97},
+    html2canvas:{scale:2,useCORS:true,letterRendering:true},
+    jsPDF:{unit:'px',format:[794,1123],orientation:'portrait',hotfixes:['px_scaling']}
+  }).from(document.getElementById('pdfDoc')).save()
+    .then(()=>showToast('PDF gerado!'));
 }
 
-// ── SALVAR HISTÓRICO ──
+// ── HISTÓRICO ──
 function salvarHistorico() {
-  const num  = g('orcNum') || currentOrcNum;
-  const name = g('clientName') || 'Sem nome';
-  const sub  = items.reduce((s,i) => s + i.qtd*i.val, 0);
-  const fr   = parseFloat(document.getElementById('frete')?.value)||0;
-  const dc   = parseFloat(document.getElementById('desconto')?.value)||0;
-  const tot  = sub + fr - dc;
-
-  const orc = {
-    num, name, total: tot,
-    date: new Date().toLocaleDateString('pt-BR'),
-    data: {
-      orcNum: num,
-      clientName: g('clientName'), clientDoc: g('clientDoc'),
-      clientContact: g('clientContact'), clientPhone: g('clientPhone'),
-      clientEmail: g('clientEmail'), clientAddr: g('clientAddr'),
-      dateStart: g('dateStart'), dateEnd: g('dateEnd'),
-      validade: document.getElementById('validade').value,
-      pagamento: document.getElementById('pagamento').value,
-      obs: g('obs'), frete: g('frete'), desconto: g('desconto'),
-      items: JSON.parse(JSON.stringify(items))
-    }
-  };
-
-  const hist = JSON.parse(localStorage.getItem('paiol_hist')||'[]');
-  hist.unshift(orc);
-  if (hist.length > 50) hist.pop();
-  localStorage.setItem('paiol_hist', JSON.stringify(hist));
+  const num=g('orcNum')||currentOrcNum;
+  const name=g('clientName')||'Sem nome';
+  const sub=items.reduce((s,i)=>s+i.qtd*i.val,0);
+  const frV=freteIncluso?0:(parseFloat(document.getElementById('freteValor')?.value)||0);
+  const frD=freteIncluso?1:(parseInt(document.getElementById('freteDias')?.value)||1);
+  const dc=parseFloat(document.getElementById('desconto')?.value)||0;
+  const tot=sub+frV*frD-dc;
+  const orc={num,name,total:tot,date:new Date().toLocaleDateString('pt-BR'),data:{
+    orcNum:num,clientName:g('clientName'),clientDoc:g('clientDoc'),clientContact:g('clientContact'),
+    clientPhone:g('clientPhone'),clientEmail:g('clientEmail'),clientAddr:g('clientAddr'),
+    dateStart:g('dateStart'),dateEnd:g('dateEnd'),
+    validade:document.getElementById('validade').value,
+    pagamento:document.getElementById('pagamento').value,
+    obs:g('obs'),freteIncluso,freteValor:g('freteValor'),freteDias:g('freteDias'),
+    desconto:g('desconto'),items:JSON.parse(JSON.stringify(items))
+  }};
+  const hist=JSON.parse(localStorage.getItem('paiol_hist')||'[]');
+  hist.unshift(orc); if(hist.length>50)hist.pop();
+  localStorage.setItem('paiol_hist',JSON.stringify(hist));
   showToast('Salvo no histórico!');
 }
 
 function renderHist() {
-  const hist = JSON.parse(localStorage.getItem('paiol_hist')||'[]');
-  const el = document.getElementById('histList');
-  if (hist.length === 0) {
-    el.innerHTML = '<div class="hist-empty">Nenhum orçamento salvo ainda.<br>Vá em Revisão e toque em<br>"Salvar no histórico".</div>';
-    return;
-  }
-  el.innerHTML = hist.map((h, idx) => `
-    <div class="hist-card">
-      <div class="hist-card-head">
-        <span class="hist-num">ORC · ${h.num}</span>
-        <span class="hist-date">${h.date}</span>
-      </div>
-      <div class="hist-cliente">${h.name}</div>
-      <div class="hist-total">${fmt(h.total)}</div>
-      <div class="hist-actions">
-        <button class="hist-btn primary" onclick="carregarOrc(${idx})">Carregar</button>
-        <button class="hist-btn" onclick="deletarOrc(${idx})">Excluir</button>
-      </div>
+  const hist=JSON.parse(localStorage.getItem('paiol_hist')||'[]');
+  const el=document.getElementById('histList');
+  if(!hist.length){el.innerHTML='<div class="hist-empty">Nenhum orçamento salvo ainda.<br>Vá em Revisão e toque em "Salvar no histórico".</div>';return;}
+  el.innerHTML=hist.map((h,idx)=>`<div class="hist-card">
+    <div class="hist-card-head"><span class="hist-num">ORC · ${h.num}</span><span class="hist-date">${h.date}</span></div>
+    <div class="hist-cliente">${h.name}</div>
+    <div class="hist-total">${fmt(h.total)}</div>
+    <div class="hist-actions">
+      <button class="hist-btn primary" onclick="carregarOrc(${idx})">Carregar</button>
+      <button class="hist-btn" onclick="deletarOrc(${idx})">Excluir</button>
     </div>
-  `).join('');
+  </div>`).join('');
 }
 
 function carregarOrc(idx) {
-  const hist = JSON.parse(localStorage.getItem('paiol_hist')||'[]');
-  const d = hist[idx].data;
-  // preenche campos
-  ['orcNum','clientName','clientDoc','clientContact','clientPhone','clientEmail','clientAddr','dateStart','dateEnd','obs','frete','desconto'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el && d[id] !== undefined) el.value = d[id];
+  const hist=JSON.parse(localStorage.getItem('paiol_hist')||'[]');
+  const d=hist[idx].data;
+  ['orcNum','clientName','clientDoc','clientContact','clientPhone','clientEmail','clientAddr','dateStart','dateEnd','obs','desconto'].forEach(id=>{
+    const el=document.getElementById(id); if(el&&d[id]!==undefined)el.value=d[id];
   });
-  document.getElementById('validade').value = d.validade || '5 dias úteis';
-  document.getElementById('pagamento').value = d.pagamento || 'PIX / Transferência';
-  items = d.items || [];
-  currentOrcNum = d.orcNum;
-  syncNum();
-  renderItems();
-  update();
-  goTab(0, document.querySelectorAll('.tab')[0]);
+  document.getElementById('validade').value=d.validade||'5 dias úteis';
+  document.getElementById('pagamento').value=d.pagamento||'PIX / Transferência';
+  freteIncluso=d.freteIncluso!==undefined?d.freteIncluso:true;
+  setFrete(freteIncluso);
+  if(!freteIncluso){
+    if(d.freteValor)document.getElementById('freteValor').value=d.freteValor;
+    if(d.freteDias)document.getElementById('freteDias').value=d.freteDias;
+  }
+  items=d.items||[]; currentOrcNum=d.orcNum; syncNum(); renderItems(); update();
+  goTab(0,document.querySelectorAll('.tab')[0]);
   showToast('Orçamento carregado!');
 }
 
 function deletarOrc(idx) {
-  if (!confirm('Excluir este orçamento do histórico?')) return;
-  const hist = JSON.parse(localStorage.getItem('paiol_hist')||'[]');
-  hist.splice(idx, 1);
-  localStorage.setItem('paiol_hist', JSON.stringify(hist));
-  renderHist();
+  if(!confirm('Excluir este orçamento?'))return;
+  const hist=JSON.parse(localStorage.getItem('paiol_hist')||'[]');
+  hist.splice(idx,1); localStorage.setItem('paiol_hist',JSON.stringify(hist)); renderHist();
 }
 
-// ── INSTALL BANNER ──
+// ── INSTALL ──
 function checkInstallBanner() {
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isStandalone = window.navigator.standalone;
-  const dismissed = localStorage.getItem('paiol_install_dismissed');
-  if (isIOS && !isStandalone && !dismissed) {
-    document.getElementById('installBanner').style.display = 'flex';
-  }
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(isIOS&&!window.navigator.standalone&&!localStorage.getItem('paiol_ib_dismissed'))
+    document.getElementById('installBanner').style.display='flex';
 }
-function showInstallGuide() {
-  alert('Para adicionar à tela inicial:\n\n1. Toque no botão de compartilhar (quadrado com seta)\n2. Role para baixo e toque em "Adicionar à Tela de Início"\n3. Confirme tocando em "Adicionar"\n\nPronto! O app aparecerá na sua tela inicial.');
-}
-function dismissBanner() {
-  document.getElementById('installBanner').style.display = 'none';
-  localStorage.setItem('paiol_install_dismissed', '1');
-}
+function showInstallGuide(){alert('Para instalar no iPhone:\n\n1. Toque no botão de compartilhar (quadrado com seta)\n2. Role e toque em "Adicionar à Tela de Início"\n3. Confirme tocando em "Adicionar"');}
+function dismissBanner(){document.getElementById('installBanner').style.display='none';localStorage.setItem('paiol_ib_dismissed','1');}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();const b=document.getElementById('installBanner');b.style.display='flex';b.querySelector('.ib:not(.dim)').onclick=async()=>{b.style.display='none';e.prompt();await e.userChoice;};});
 
 // ── HELPERS ──
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault(); deferredPrompt = e;
-  const banner = document.getElementById('installBanner');
-  banner.style.display = 'flex';
-  banner.querySelector('button.ib:not(.dismiss)').onclick = async () => {
-    banner.style.display = 'none';
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-  };
-});
-
-function g(id) { return document.getElementById(id)?.value?.trim() || ''; }
-function setText(id, v) { const el = document.getElementById(id); if(el) el.textContent = v; }
-function fmt(n) { return 'R$ ' + (n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function fmtDate(d) { return isNaN(d) ? '—' : d.toLocaleDateString('pt-BR'); }
-
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
-}
+function g(id){return document.getElementById(id)?.value?.trim()||'';}
+function setText(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
+function fmt(n){return'R$ '+(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtDate(d){return isNaN(d)?'—':d.toLocaleDateString('pt-BR');}
+let toastT;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2500);}
 </script>
 </body>
 </html>
