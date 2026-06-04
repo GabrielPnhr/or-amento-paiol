@@ -490,7 +490,7 @@ body {
         </select>
       </div>
       <div class="fg">
-        <label>Pagamento</label>
+        <label>Forma de pagamento</label>
         <select id="pagamento" onchange="update()">
           <option>PIX / Transferência</option>
           <option>Boleto bancário</option>
@@ -499,6 +499,21 @@ body {
         </select>
       </div>
     </div>
+
+    <!-- PRAZO DDL automático -->
+    <div id="ddlBox" style="background:rgba(245,196,0,0.07);border:1px solid rgba(245,196,0,0.25);padding:14px 16px;margin-bottom:12px;display:none;">
+      <div style="font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--y);margin-bottom:8px;">Prazo de pagamento (DDL)</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div id="ddlDias" style="font-size:13px;color:rgba(255,255,255,0.5);"></div>
+          <div id="ddlPrazo" style="font-family:var(--fh);font-size:22px;font-weight:900;color:var(--y);letter-spacing:1px;margin-top:2px;"></div>
+        </div>
+        <div style="text-align:right;font-size:11px;color:rgba(255,255,255,0.3);line-height:1.5;">
+          1–14 dias → 15 DDL<br>15–30 dias → 28 DDL
+        </div>
+      </div>
+    </div>
+
     <div class="fg"><label>Observações</label><textarea id="obs" placeholder="Anotações internas, condições especiais..." oninput="update()"></textarea></div>
 
     <div class="action-area">
@@ -777,6 +792,17 @@ function renderItems() {
 }
 
 // ── UPDATE TOTAIS ──
+function calcDDL() {
+  const ds = g('dateStart'), de = g('dateEnd');
+  if (!ds || !de) return null;
+  const start = new Date(ds + 'T12:00:00');
+  const end   = new Date(de + 'T12:00:00');
+  const dias  = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
+  if (dias < 1) return null;
+  if (dias <= 14) return { dias, prazo: '15 DDL', label: '1 a 14 dias de locação' };
+  if (dias <= 30) return { dias, prazo: '28 DDL', label: '15 a 30 dias de locação' };
+  return { dias, prazo: 'A combinar', label: `${dias} dias de locação` };
+}
 function update() {
   const sub = items.reduce((s,i) => s + i.qtd*i.val, 0);
   const fr  = parseFloat(document.getElementById('frete')?.value)||0;
@@ -789,6 +815,19 @@ function update() {
   const trD = document.getElementById('trDesc');
   if (trF) { trF.style.display = fr > 0 ? 'flex' : 'none'; setText('tFrete', fmt(fr)); }
   if (trD) { trD.style.display = dc > 0 ? 'flex' : 'none'; setText('tDesc', `— ${fmt(dc)}`); }
+
+  // DDL automático
+  const ddl = calcDDL();
+  const ddlBox = document.getElementById('ddlBox');
+  if (ddlBox) {
+    if (ddl) {
+      ddlBox.style.display = 'block';
+      setText('ddlDias', ddl.label);
+      setText('ddlPrazo', ddl.prazo);
+    } else {
+      ddlBox.style.display = 'none';
+    }
+  }
 }
 
 // ── PREVIEW ──
@@ -822,8 +861,10 @@ function buildPreview() {
 
   const ds = g('dateStart'), de = g('dateEnd');
   const periodo = ds && de ? `${fmtDate(new Date(ds+'T12:00:00'))} até ${fmtDate(new Date(de+'T12:00:00'))}` : ds ? `A partir de ${fmtDate(new Date(ds+'T12:00:00'))}` : '—';
+  const ddl = calcDDL();
+  const ddlTxt = ddl ? `\nPrazo de pagamento: ${ddl.prazo} (${ddl.label})` : '';
   setText('prev_cond',
-    `Período: ${periodo}\nValidade: ${document.getElementById('validade').value}\nPagamento: ${document.getElementById('pagamento').value}${addr ? '\nEntrega: '+addr : ''}`
+    `Período: ${periodo}\nValidade: ${document.getElementById('validade').value}\nForma de pagamento: ${document.getElementById('pagamento').value}${ddlTxt}${addr ? '\nEntrega: '+addr : ''}`
   );
   document.getElementById('prev_cond').style.whiteSpace = 'pre-line';
   document.getElementById('prev_cond').style.color = 'rgba(255,255,255,0.6)';
@@ -843,6 +884,7 @@ function enviarWA() {
 
   const linhas = items.map(i => `  • ${i.eq} (${i.per} x${i.qtd}) — ${fmt(i.qtd*i.val)}`).join('\n');
 
+  const ddl = calcDDL();
   const msg = `*Orçamento Paiol Rental — Nº ${num}*\n\n` +
     `Olá *${nome}*! Segue o orçamento solicitado:\n\n` +
     `*Equipamentos:*\n${linhas}\n\n` +
@@ -850,8 +892,9 @@ function enviarWA() {
     (dc > 0 ? `*Desconto:* — ${fmt(dc)}\n` : '') +
     `*Total: ${fmt(tot)}*\n\n` +
     `*Validade:* ${document.getElementById('validade').value}\n` +
-    `*Pagamento:* ${document.getElementById('pagamento').value}\n\n` +
-    `Qualquer dúvida estou à disposição!\n_Paiol Rental — (11) 95426-7917_`;
+    `*Forma de pagamento:* ${document.getElementById('pagamento').value}\n` +
+    (ddl ? `*Prazo de pagamento:* ${ddl.prazo}\n` : '') +
+    `\nQualquer dúvida estou à disposição!\n_Paiol Rental — (11) 95426-7917_`;
 
   const dest = phone ? (phone.startsWith('55') ? phone : '55'+phone) : '5511954267917';
   window.open(`https://wa.me/${dest}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -901,6 +944,13 @@ function gerarPDF() {
   const ds = g('dateStart'), de = g('dateEnd');
   setText('pdf_periodo', ds && de ? `${fmtDate(new Date(ds+'T12:00:00'))} até ${fmtDate(new Date(de+'T12:00:00'))}` : ds ? `A partir de ${fmtDate(new Date(ds+'T12:00:00'))}` : '—');
   setText('pdf_pag', document.getElementById('pagamento').value);
+
+  // DDL no PDF
+  const ddl = calcDDL();
+  const pdfPagEl = document.getElementById('pdf_pag');
+  if (pdfPagEl && ddl) {
+    pdfPagEl.innerHTML = `${document.getElementById('pagamento').value}<br><span style="font-size:12px;color:#555;">Prazo: <strong style="color:#1C1C1C">${ddl.prazo}</strong> — ${ddl.label}</span>`;
+  }
 
   const obs = g('obs');
   document.getElementById('pdf_obs_box').style.display = obs ? 'block' : 'none';
