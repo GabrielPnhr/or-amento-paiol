@@ -481,12 +481,14 @@ const ALTURAS_POR_EQUIP = {
   'Articulada Elétrica': ['12m','15m'],
   '36AM': ['12m'],
   'AWP-25S': ['9.6m'],
-  'Empilhadeira a GLP': ['—'],
-  'Empilhadeira Diesel': ['—'],
-  'Empilhadeira Elétrica': ['—'],
-  'Transpaleteira': ['—'],
-  'Outro': ['—'],
+  'Empilhadeira a GLP': ['TEXTO_LIVRE'],
+  'Empilhadeira Diesel': ['TEXTO_LIVRE'],
+  'Empilhadeira Elétrica': ['TEXTO_LIVRE'],
+  'Transpaleteira': ['TEXTO_LIVRE'],
+  'Outro': ['TEXTO_LIVRE'],
 };
+// Equipamentos com campo de especificação livre (texto)
+const SPEC_LIVRE = ['Empilhadeira a GLP','Empilhadeira Diesel','Empilhadeira Elétrica','Transpaleteira','Outro'];
 const PERIODOS = ['Diária','3 dias','7 dias','10 dias','15 dias','20 dias','Mensal','A combinar'];
 
 let items = [];
@@ -558,12 +560,15 @@ function updateItem(id, field, v) {
   else if (field==='val') item.val = parseFloat(v)||0;
   else item[field] = v;
 
-  // Se mudou equipamento, recalcula alturas e tenta sugerir preço
+  // Se mudou equipamento, reseta especificação e re-renderiza
   if (field==='eq') {
-    const alturas = ALTURAS_POR_EQUIP[v]||['—'];
-    item.alt = alturas[0];
-    // re-render para atualizar select de altura
+    const isLivre = SPEC_LIVRE.includes(v);
+    item.alt = isLivre ? '' : (ALTURAS_POR_EQUIP[v]||['—'])[0];
     renderItems();
+    // Tenta sugerir preço se tiver tabela
+    const sugestao = getPreco(v, item.alt, item.per);
+    if (sugestao > 0) { item.val = sugestao; const valEl=document.getElementById('val_'+id); if(valEl)valEl.value=sugestao; }
+    update(); return;
   }
 
   // Sugestão de preço automática
@@ -597,9 +602,23 @@ function renderItems() {
     return;
   }
   list.innerHTML = items.map((item,idx)=>{
+    const isLivre = SPEC_LIVRE.includes(item.eq);
     const alturas = ALTURAS_POR_EQUIP[item.eq]||['—'];
-    const hasAlt = alturas[0]!=='—';
+    const hasDropdown = !isLivre && alturas[0] !== '—';
     const sugestao = getPreco(item.eq, item.alt, item.per);
+    const specField = isLivre
+      ? `<div class="fg">
+          <label>Especificação (ton, modelo, tipo)</label>
+          <input type="text" id="alt_${item.id}" value="${item.alt&&item.alt!=='—'?item.alt:''}" placeholder="Ex: 2,5 Ton Torre Triplex, Contrabalançada 3 Ton..." oninput="updateItem(${item.id},'alt',this.value)">
+         </div>`
+      : hasDropdown
+        ? `<div class="fg">
+            <label>Altura de trabalho</label>
+            <select id="alt_${item.id}" onchange="updateItem(${item.id},'alt',this.value)">
+              ${alturas.map(a=>`<option${a===item.alt?' selected':''}>${a}</option>`).join('')}
+            </select>
+           </div>`
+        : '';
     return `<div class="item-card">
       <div class="item-card-head"><span class="item-idx">Item ${String(idx+1).padStart(2,'0')}</span><button class="rm-btn" onclick="removeItem(${item.id})">✕</button></div>
       <div class="fg">
@@ -608,12 +627,7 @@ function renderItems() {
           ${EQUIPAMENTOS.map(e=>`<option${e===item.eq?' selected':''}>${e}</option>`).join('')}
         </select>
       </div>
-      ${hasAlt ? `<div class="fg">
-        <label>Altura de trabalho</label>
-        <select id="alt_${item.id}" onchange="updateItem(${item.id},'alt',this.value)">
-          ${alturas.map(a=>`<option${a===item.alt?' selected':''}>${a}</option>`).join('')}
-        </select>
-      </div>` : ''}
+      ${specField}
       <div class="item-row2">
         <div class="fg">
           <label>Período</label>
@@ -629,7 +643,7 @@ function renderItems() {
       <div class="fg">
         <label>Valor unitário (R$)</label>
         <input type="number" id="val_${item.id}" min="0" step="0.01" value="${item.val||''}" placeholder="0,00" onchange="updateItem(${item.id},'val',this.value)">
-        <div class="preco-hint" id="hint_${item.id}">${sugestao>0?`Preço sugerido: ${fmt(sugestao)} (editável)`:''}</div>
+        ${sugestao>0?`<div class="preco-hint" id="hint_${item.id}">Preço sugerido: ${fmt(sugestao)} (editável)</div>`:`<div class="preco-hint" id="hint_${item.id}"></div>`}
       </div>
       <div class="item-sub">Subtotal: <span id="sub_${item.id}">${fmt(item.qtd*item.val)}</span></div>
     </div>`;
